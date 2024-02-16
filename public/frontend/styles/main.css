@@ -1,0 +1,23 @@
+html,body{
+    height: 100% !important;
+}
+
+body{
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+}
+
+.form-signin{
+    border-radius: 12px;
+}
+
+.color-blue{
+    color: #23AAE2;
+}
+
+.btn-blue{
+    background: #76C046 !important;
+}
+
+.btn-blue:hover{
+    background: #538631 !important;
+}
