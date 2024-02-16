@@ -1,5 +1,13 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CrudAjaxController;
+use App\Http\Controllers\CrudController;
+use App\Http\Controllers\DapenController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MitraController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,16 +21,68 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::redirect('/', '/dashboard-general-dashboard');
+// Route::redirect('/', '/home');
+Route::get('/', [AuthController::class, 'index'])->name('login');
+Route::post('/login', [AuthController::class, 'auth'])->name('auth');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::get('/register', [AuthController::class, 'register'])->name('register');
 
 // Dashboard
-Route::get('/dashboard-general-dashboard', function () {
-    return view('pages.dashboard-general-dashboard', ['type_menu' => 'dashboard']);
-});
+Route::get('/home', function () {
+    return view('pages.home', ['type_menu' => 'dashboard']);
+})->middleware('auth');
 Route::get('/dashboard-ecommerce-dashboard', function () {
     return view('pages.dashboard-ecommerce-dashboard', ['type_menu' => 'dashboard']);
 });
 
+// Menu Admin
+Route::middleware(['admin', 'auth'])->group(function () {
+    Route::get('/admin/akun', [AdminController::class, 'index'])->name('kelolaAkun');
+    Route::post('/admin/store', [AdminController::class, 'store'])->name('kelolaAkun_tambah');
+    Route::post('/admin/show', [AdminController::class, 'show'])->name('kelolaAkun_show');
+    Route::post('/admin/update', [AdminController::class, 'update'])->name('kelolaAkun_update');
+    Route::post('/admin/destroy', [AdminController::class, 'destroy'])->name('kelolaAkun_destroy');
+
+    Route::get('/admin/instansi', [AdminController::class, 'instansi'])->name('instansi');
+    Route::post('/admin/instansi/store', [AdminController::class, 'store_instansi'])->name('instansi_tambah');
+    Route::post('/admin/instansi/show', [AdminController::class, 'show_instansi'])->name('instansi_show');
+    Route::post('/admin/instansi/update', [AdminController::class, 'update_instansi'])->name('instansi_update');
+    Route::post('/admin/instansi/destroy', [AdminController::class, 'destroy_instansi'])->name('instansi_destroy');
+});
+
+// Menu Staff/Karyawan
+Route::middleware(['staff', 'auth'])->group(function () {
+    Route::get('/staff/kelolaTahun', [DapenController::class, 'getTahun'])->name('kelolaTahunByStaff');
+    Route::post('/staff/kelolaTahun/store', [DapenController::class, 'store'])->name('kelolaTahunByStaff_tambah');
+    Route::post('/staff/kelolaTahun/update', [DapenController::class, 'update'])->name('kelolaTahunByStaff_update');
+    Route::post('/staff/kelolaTahun/show', [DapenController::class, 'show_2'])->name('kelolaTahunByStaff_show');
+    Route::post('/staff/kelolaTahun/destroy', [DapenController::class, 'destroy'])->name('kelolaTahunByStaff_destroy');
+
+    Route::get('/staff/dataPesertaPensiun', [DapenController::class, 'index'])->name('dataPensiun');
+    Route::get('/staff/dataPesertaPensiun/{id}', [DapenController::class, 'getById'])->name('dataPensiunById');
+    Route::post('/staff/dataPesertaPensiun/show', [DapenController::class, 'index'])->name('dataPensiun_show');
+    Route::post('/staff/dataPesertaPensiun/{id}/export', [DapenController::class, 'export'])->name('dataPensiun_export');
+    Route::get('/staff/dataPesertaPensiunexport', [DapenController::class, 'export'])->name('dataPensiun_export');
+    Route::get('/staff/export_excel/{id}', [DapenController::class, 'export_excel']);
+});
+
+// Menu Mitra
+Route::middleware(['mitra', 'auth'])->group(function () {
+    Route::get('/mitra/pesertaPensiun', [MitraController::class, 'index'])->name('dataPesertaPensiun');
+    Route::post('/mitra/pesertaPensiun/store', [MitraController::class, 'store'])->name('dataPesertaPensiun_tambah');
+    Route::post('/mitra/pesertaPensiun/show', [MitraController::class, 'show'])->name('dataPesertaPensiun_show');
+    Route::post('/mitra/pesertaPensiun/update', [MitraController::class, 'update'])->name('dataPesertaPensiun_update');
+    Route::post('/mitra/pesertaPensiun/destroy', [MitraController::class, 'destroy'])->name('dataPesertaPensiun_destroy');
+    Route::post('/mitra/pesertaPensiun/import', [MitraController::class, 'import'])->name('dataPesertaPensiun_import');
+
+    Route::get('/mitra/dataIuranPerBulan', [MitraController::class, 'index_2'])->name('dataPesertaPensiunPerBulan');
+    Route::post('/mitra/dataIuranPerBulan/store', [MitraController::class, 'store_2'])->name('dataPesertaPensiunPerBulan_tambah');
+    Route::post('/mitra/dataIuranPerBulan/show', [MitraController::class, 'show_2'])->name('dataPesertaPensiunPerBulan_show');
+    Route::post('/mitra/dataIuranPerBulan/update', [MitraController::class, 'update_2'])->name('dataPesertaPensiunPerBulan_update');
+    Route::post('/mitra/dataIuranPerBulan/destroy', [MitraController::class, 'destroy_2'])->name('dataPesertaPensiunPerBulan_destroy');
+});
+
+Route::get('/profile', [UserController::class, 'index'])->name('profile');
 
 // Layout
 Route::get('/layout-default-layout', function () {
