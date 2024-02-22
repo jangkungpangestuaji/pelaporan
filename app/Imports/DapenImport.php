@@ -10,20 +10,11 @@ use Maatwebsite\Excel\Concerns\ToCollection;
 
 class DapenImport implements ToCollection
 {
-    /**
-     * @param array $row
-     *
-     * @return \Illuminate\Database\Eloquent\Model|null
-     */
-
     public function collection(Collection $rows)
     {
         $results = DB::table('data_iuran')
             ->leftJoin('peserta', 'peserta.id', '=', 'data_iuran.peserta_id')
-            ->select('*')
-            // ->select('peserta.id', 'peserta.instansi_id', 'peserta.no_peserta', 'peserta.nik', 'peserta.nama', 'data_iuran.nama_bulan', 'data_iuran.gaji_pokok', 'data_iuran.adj_gapok', 'data_iuran.in_peserta', 'data_iuran.rapel_in_peserta', 'data_iuran.in_pk', 'data_iuran.rapel_in_pk', 'data_iuran.jumlah')
-            ->get();
-        // dd($results);
+            ->select('*')->get();
 
         $peserta_id = "";
         $data = [];

@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
 
 class Kernel extends HttpKernel
@@ -67,4 +68,10 @@ class Kernel extends HttpKernel
         'staff' => \App\Http\Middleware\IsStaff::class,
         'mitra' => \App\Http\Middleware\IsMitra::class,
     ];
+
+    protected function schedule(Schedule $schedule)
+    {
+        $schedule->call('App\Http\Controllers\TahunController@addNewYearData')
+            ->yearly(); // Jalankan setiap tahun pada 1 Januari
+    }
 }

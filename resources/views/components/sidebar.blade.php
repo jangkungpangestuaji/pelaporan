@@ -11,22 +11,19 @@
             <li class="{{ Request::is('home') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ url('home') }}"><i class="fas fa-home"></i> <span>Home</span></a>
             </li>
-            
+
             @can('staff')
             <li class="menu-header">Menu</li>
             <li class="nav-item dropdown {{ Request::is('staff/*') ? 'active' : ''}}">
                 <a href="#" class="nav-link has-dropdown" data-toggle="dropdown"><i class="fas fa-columns"></i> <span>Pegawai</span></a>
                 <ul class="dropdown-menu">
-                    <li class="{{ Request::is('staff/kelolaTahun') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('kelolaTahunByStaff')}}"> <span>Kelola Tahun</span></a>
-                    </li>
-                    <li class="{{ Request::is('staff/dataPesertaPensiun') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('dataPensiun')}}"> <span>Data Pensiun</span></a>
+                    <li class="{{ Request::is('staff/dataPesertaPensiun/*') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('staffDataPensiun')}}"> <span>Data Pensiun</span></a>
                     </li>
                 </ul>
             </li>
             @endcan
-            
+
             @can('mitra')
             <li class="menu-header">Menu</li>
             <li class="nav-item dropdown {{ Request::is('mitra/*') ? 'active' : ''}}">
@@ -36,12 +33,15 @@
                         <a class="nav-link" href="{{ route('dataPesertaPensiun')}}"> <span>Peserta Pensiun</span></a>
                     </li>
                     <li class="{{ Request::is('mitra/dataIuranPerBulan') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('dataPesertaPensiunPerBulan')}}"> <span>Data Pensiun</span></a>
+                        <a class="nav-link" href="{{ route('dataPensiun')}}"> <span>Data Pensiun</span></a>
+                    </li>
+                    <li class="{{ Request::is('mitra/uploadBuktiPembayaran') ? 'active' : '' }}">
+                        <a class="nav-link" href="{{ route('uploadBuktiPembayaran')}}"> <span>Upload Bukti Pembayaran</span></a>
                     </li>
                 </ul>
             </li>
             @endcan
-            
+
             @can('admin')
             <li class="menu-header">Menu</li>
             <li class="nav-item dropdown {{ Request::is('admin/*') ? 'active' : ''}}">
@@ -56,12 +56,12 @@
                 </ul>
             </li>
             @endcan
-            
+
             <li class="menu-header">Profile</li>
             <li class="{{ Request::is('profile') ? 'active' : '' }}">
                 <a class="nav-link" href="{{ route('profile')}}"> <i class="fas fa-user"></i><span>Profile</span></a>
             </li>
         </ul>
-        
+
     </aside>
 </div>

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Imports\DapenImport;
 use Illuminate\Http\Request;
+use App\Models\Tahun;
+use App\Models\Bulan;
 use App\Models\Peserta;
 use App\Models\DataIuran;
 use Illuminate\Support\Facades\Auth;
@@ -45,18 +47,74 @@ class MitraController extends Controller
     }
     public function index_2()
     {
+        $currentYear = date('Y');
+        // dd($currentYear);
+        if (!Tahun::where('tahun', $currentYear)->exists()) {
+            // Tambahkan data tahun baru
+            Tahun::insert(['tahun' => $currentYear]);
+        }
+        $data = Tahun::orderBy('id', 'desc')->get();
+        if (request()->ajax()) {
+            return datatables()->of($data)
+                ->addColumn('Aksi', function ($data) {
+                    $button = "
+                    <a href='/mitra/uploadBuktiPembayaran/{$data->id}'>
+                    <button type='button' id='" . $data->id . "' class='update btn btn-warning'  >
+                        Buka
+                    </button>
+                    </a>";
+                    return $button;
+                })
+                ->rawColumns(['Aksi'])
+                ->make(true);
+        }
+        return view('pages.mitra.dataPensiun.dataPerTahun', compact('data'));
+    }
+    public function getDataById($id)
+    {
+        $data = DB::table('bulan')->get();
+        $array = [
+            'data' => $data,
+            'id' => $id
+        ];
+        // dd($id);
+        if (request()->ajax()) {
+            return datatables()->of($data)
+                ->addColumn('Aksi', function ($row) use ($array) {
+                    $button = "
+                <a href='/mitra/dataPensiun/{$array['id']}/{$row->id}'>
+                    <button type='button' id='{$row->id}' class='update btn btn-warning'>
+                        Buka
+                    </button>
+                </a>";
+                    return $button;
+                })
+                ->rawColumns(['Aksi'])
+                ->make(true);
+        }
+        return view('pages.mitra.dataPensiun.dataPerBulan', $array, compact('data'));
+    }
+    public function getDataByBulan($tahun,$bulan)
+    {
         $instansi_id = Auth::user()->instansi_id;
-        $dataPeserta = Peserta::orderBy('id', 'desc')->where('instansi_id', '=', $instansi_id)->get();
+        $dataPeserta = Peserta::orderBy('id', 'desc')->where('instansi_id', '=', $instansi_id, 'and', 'tahun_id', '=', $bulan)->get();
         $dataBulan = DB::table('data_iuran')
             ->leftJoin('peserta', 'peserta.id', '=', 'data_iuran.peserta_id')
-            ->select('peserta.id', 'peserta.instansi_id', 'peserta.no_peserta', 'peserta.nik', 'peserta.nama', 'data_iuran.nama_bulan', 'data_iuran.gaji_pokok', 'data_iuran.adj_gapok', 'data_iuran.in_peserta', 'data_iuran.rapel_in_peserta', 'data_iuran.in_pk', 'data_iuran.rapel_in_pk', 'data_iuran.jumlah')
+            ->leftJoin('bulan', 'bulan.id', '=', 'data_iuran.bulan_id')
+            ->leftJoin('tahun', 'tahun.id', '=', 'data_iuran.tahun_id')
+            ->select('peserta.id', 'bulan.bulan', 'peserta.instansi_id', 'peserta.no_peserta', 'peserta.nik', 'peserta.nama', 'data_iuran.gaji_pokok', 'data_iuran.adj_gapok', 'data_iuran.in_peserta', 'data_iuran.rapel_in_peserta', 'data_iuran.in_pk', 'data_iuran.rapel_in_pk', 'data_iuran.jumlah')
             ->where('peserta.instansi_id', '=', $instansi_id)
+            ->where('data_iuran.tahun_id', '=', $tahun)
+            ->where('data_iuran.bulan_id', '=', $bulan)
             ->get();
+        // dd($dataBulan);
 
         $array = ([
-            'type_menu' => 'mitraDataPesertaPensiunPerBulan',
+            'type_menu' => 'mitradataPensiun',
             'dataBulan' => $dataBulan,
-            'dataPeserta' => $dataPeserta
+            'dataPeserta' => $dataPeserta,
+            'bulan' => $bulan,
+            'id' => $tahun
         ]);
 
         if (request()->ajax()) {
@@ -77,7 +135,7 @@ class MitraController extends Controller
                 ->rawColumns(['Aksi'])
                 ->make(true);
         }
-        return view('pages.mitra.dataPesertaPensiunPerBulan', $array, compact('dataBulan'));
+        return view('pages.mitra.dataPensiun.dataPensiun', $array, compact('dataBulan'));
     }
     public function store_2(Request $request)
     {

@@ -27,56 +27,26 @@
                         </div>
                     </div>
                 </div>
-                <div class="accordion" id="accordionExample">
-                    <div class="card">
-                        <div class="card-header" id="headingOne">
-                            <h2 class="mb-0">
-                                <button class="btn btn-block btn-secondary text-left" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                    Januari
-                                </button>
-                            </h2>
-                        </div>
-
-                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionExample">
-                            <table id="table" class="table table-bordered table-hover" style="width: 100%;">
-                                <thead>
-                                    <tr class="text-center">
-                                        <th>No</th>
-                                        <th>No Peserta</th>
-                                        <th>NIK</th>
-                                        <th>Nama</th>
-                                        <th>Bulan</th>
-                                        <th>Gaji Pokok</th>
-                                        <th>Adj. Gaji Pokok</th>
-                                        <th>IN Pst</th>
-                                        <th>RAPEL IN Pst</th>
-                                        <th>IN PK</th>
-                                        <th>RAPEL IN PK</th>
-                                        <th>Jumlah</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="card">
-                        <div class="card-header" id="headingTwo">
-                            <h2 class="mb-0">
-                                <button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                                    Collapsible Group Item #2
-                                </button>
-                            </h2>
-                        </div>
-                        <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionExample">
-                            <div class="card-body">
-                                Some placeholder content for the second accordion panel. This panel is hidden by default.
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <table id="bulan" class="table table-bordered table-hover" style="width: 100%;">
+                    <thead>
+                        <tr class="text-center">
+                            <th>No</th>
+                            <th>Bulan</th>
+                            <th>No Peserta</th>
+                            <th>NIK</th>
+                            <th>Nama</th>
+                            <th>Gaji Pokok</th>
+                            <th>Adj. Gaji Pokok</th>
+                            <th>IN Pst</th>
+                            <th>RAPEL IN Pst</th>
+                            <th>IN PK</th>
+                            <th>RAPEL IN PK</th>
+                            <th>Jumlah</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
     </section>
@@ -175,18 +145,19 @@
 <script src="{{ asset('library/sweetalert/dist/sweetalert.min.js') }}"></script>
 <!-- Page Specific JS File -->
 
+
 <script>
-    // Tampilkan data
     $(document).ready(function() {
-        isi_table()
-    })
+        // Memuat data baru setelah instansi DataTable dihancurkan
+        isi_table();
+    });
 
     function isi_table() {
-        $('#table').DataTable({
+        $('#bulan').DataTable({
             serverside: true,
             responsive: true,
             ajax: {
-                url: "{{ route('dataPesertaPensiunPerBulan') }}"
+                url: "{{url()->current()}}"
             },
             columns: [{
                     "data": null,
@@ -196,6 +167,9 @@
                     }
                 },
                 {
+                    data: 'bulan',
+                },
+                {
                     data: 'no_peserta',
                 },
                 {
@@ -203,9 +177,6 @@
                 },
                 {
                     data: 'nama',
-                },
-                {
-                    data: 'nama_bulan',
                 },
                 {
                     data: 'gaji_pokok',
@@ -234,7 +205,7 @@
             ]
         })
     }
-        
+
     //Reset Form
     $('#tambah').on('click', function() {
         $("#simpan").removeClass("btn btn-warning")
@@ -246,7 +217,7 @@
         $(".unhidden").attr('hidden', true)
         $(".hidden").removeAttr('hidden', true)
     })
-    
+
     $('#import').on('click', function() {
         $("#simpan").removeClass("btn btn-warning")
         $("#simpan").addClass("btn btn-primary")
@@ -261,10 +232,10 @@
         if ($(this).text() === 'Simpan') {
             event.preventDefault()
             tambah()
-        } else if($(this).text() === 'Import'){
+        } else if ($(this).text() === 'Import') {
             event.preventDefault()
             impor()
-        }else {
+        } else {
             event.preventDefault()
             update()
         }
@@ -273,7 +244,7 @@
     function tambah() {
         $('#simpan').text('Simpan')
         $.ajax({
-            url: "{{ route('dataPesertaPensiunPerBulan_tambah') }}",
+            url: "{{ route('dataPensiun_tambah') }}",
             type: "POST",
             data: {
                 peserta_id: $('#peserta').val(),
@@ -289,7 +260,7 @@
             },
             success: function(res) {
                 console.log(res);
-                $("#table").DataTable().ajax.reload();
+                $("#bulan1").DataTable().ajax.reload();
                 // alert
                 Swal.fire(
                     'Sukses',
@@ -327,7 +298,7 @@
             contentType: false, // Set false agar jQuery tidak menambahkan header Content-Type
             success: function(res) {
                 console.log(res);
-                $("#table").DataTable().ajax.reload();
+                $("#bulan1").DataTable().ajax.reload();
                 // alert
                 Swal.fire(
                     'Sukses',
@@ -347,9 +318,8 @@
         })
     }
 
-    // Show Update Data     
+    // Show Update Data
     $(document).on('click', '.update', function() {
-        // console.log('terbuka')
         let id = $(this).attr('id')
         $('#tambah').click()
         $('#simpan').text('Perbaharui Data')
@@ -357,7 +327,7 @@
         $("#simpan").removeClass("btn btn-primary")
         $("#simpan").addClass("btn btn-warning")
         $.ajax({
-            url: "{{ route('dataPesertaPensiunPerBulan_show') }}",
+            url: "{{ route('uploadBuktiPembayaranByTahun_show') }}",
             type: 'POST',
             data: {
                 id: id,
@@ -380,7 +350,7 @@
 
     function update() {
         $.ajax({
-            url: "{{ route('dataPesertaPensiunPerBulan_update') }}",
+            url: "{{ route('dataPensiun_update') }}",
             type: "POST",
             data: {
                 id: $('#id').val(),
@@ -397,7 +367,7 @@
             },
             success: function(res) {
                 console.log(res);
-                $("#table").DataTable().ajax.reload();
+                $("#bulan1").DataTable().ajax.reload();
                 // alert
                 Swal.fire(
                     'Sukses',
@@ -450,14 +420,14 @@
 
                 let id = $(this).attr('id')
                 $.ajax({
-                    url: "{{ route('dataPesertaPensiunPerBulan_destroy') }}",
+                    url: "{{ route('dataPensiun_destroy') }}",
                     type: 'POST',
                     data: {
                         id: id,
                         "_token": "{{ csrf_token() }}"
                     },
                     success: function() {
-                        $("#table").DataTable().ajax.reload();
+                        $("#bulan1").DataTable().ajax.reload();
                     }
                 })
             }

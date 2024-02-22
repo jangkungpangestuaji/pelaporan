@@ -76,7 +76,7 @@
             serverside: true,
             responsive: true,
             ajax: {
-                url: "{{ route('dataPensiun') }}"
+                url: "{{ route('staffDataPensiun') }}"
             },
             columns: [
                 {
@@ -95,25 +95,6 @@
             ]
         })
     }
-
-    // Export
-    // $(document).on('click', '.export', function() {
-    //     // let id = $(this).attr('id')
-    //     $.ajax({
-    //         url: "{{ route('dataPensiun_export') }}",
-    //         type: 'POST',
-    //         data: {
-    //             // id: id,
-    //             "_token": "{{ csrf_token() }}"
-    //         },
-    //         success: function(res) {
-    //             console.log('Berhasil');
-    //         },
-    //         error: function(){
-    //             console.log('Gagal');
-    //         }
-    //     })
-    // })
 </script>
 
 @endpush
