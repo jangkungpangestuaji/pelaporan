@@ -19,7 +19,7 @@
                 <div class="card-title">
                     <div class="row">
                         <div class="col-10">
-                            <h4>Data Per Bulan</h4>
+                            <h4>Tabel Bulan</h4>
                         </div>
                         <div class="col btn-group">
                             <button href="#" class="btn btn-secondary" data-toggle="modal" id="tambah" data-target="#modalTambah">Tambah Tahun</button>
@@ -49,12 +49,12 @@
 
 <!-- Modal Tambah -->
 <form enctype="multipart/form-data">
-    <div class="modal fade" id="modalTambah">
+    <div class="modal fade" id="modalVerifikasi">
         <input type="hidden" id="id" name="id">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="judul_modal">Tambah Tahun</h4>
+                    <h4 class="modal-title" id="judul_modal"></h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -92,7 +92,7 @@
             serverside: true,
             responsive: true,
             ajax: {
-                url: "/staff/dataPesertaPensiun/{{$instansi_id}}/{{$tahun}}"
+                url: "/staff/{{$type_menu}}/{{$instansi_id}}/{{$tahun}}"
             },
             columns: [{
                     "data": null,
@@ -110,6 +110,27 @@
             ]
         })
     }
+
+    // Show Update Data
+    $(document).on('click', '.verifikasi', function() {
+        let id = $(this).attr('id')
+        $('#tambah').click()
+        $('#simpan').text('Simpan')
+        $('#judul_modal').text('Verifikasi Data')
+        $("#simpan").removeClass("btn btn-primary")
+        $("#simpan").addClass("btn btn-warning")
+        $.ajax({
+            url: "/staff/{{$type_menu}}/{{$instansi_id}}/{{$tahun}}/show",
+            type: 'POST',
+            data: {
+                id: id,
+                "_token": "{{ csrf_token() }}"
+            },
+            success: function(res) {
+                $("#modalTambah [name='id']").val(res.data.id)
+            }
+        })
+    })
 </script>
 
 @endpush

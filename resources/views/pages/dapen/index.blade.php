@@ -76,7 +76,7 @@
             serverside: true,
             responsive: true,
             ajax: {
-                url: "{{ route('staffDataPensiun') }}"
+                url: "/staff/{{$type_menu}}"
             },
             columns: [
                 {

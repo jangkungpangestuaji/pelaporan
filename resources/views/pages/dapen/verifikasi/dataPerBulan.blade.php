@@ -10,7 +10,7 @@
 <div class="main-content">
     <section class="section">
         <div class="section-header">
-            <h1>Data Pensiun</h1>
+            <h1>Dashboard</h1>
         </div>
 
         <!-- Tabel Peserta Pensiun -->
@@ -19,33 +19,29 @@
                 <div class="card-title">
                     <div class="row">
                         <div class="col-10">
-                            <h4>Tabel Tahun</h4>
+                            <h4>Tabel Bulan</h4>
                         </div>
                         <div class="col btn-group">
-                            <button href="#" class="btn btn-secondary" data-toggle="modal" id="tambah" data-target="#modalTambah">Tambah Tahun</button>
                         </div>
                     </div>
                 </div>
-                <div class="accordion" id="accordionExample">
-                    <div class="card">
-                        <table id="table" class="table table-bordered table-hover" style="width: 100%;">
-                            <thead>
-                                <tr class="text-center">
-                                    <th class="col-1 text-center">No</th>
-                                    <th class="col-lg-8 text-center">Tahun</th>
-                                    <th class="col-sm-3 text-center">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                <table id="table1" class="table table-bordered table-striped table-hover" style="width: 100%;">
+                    <thead>
+                        <tr class="text-center">
+                            <th>No</th>
+                            <th>Bulan</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
 
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                    </tbody>
+                </table>
             </div>
         </div>
     </section>
 </div>
+
 @endsection
 
 @push('scripts')
@@ -61,11 +57,11 @@
     })
 
     function isi_table() {
-        $('#table').DataTable({
+        $('#table1').DataTable({
             serverside: true,
             responsive: true,
             ajax: {
-                url: "/staff/{{$type_menu}}/{{$instansi_id}}"
+                url: "/staff/verifikasi/{{$tahun}}"
             },
             columns: [{
                     "data": null,
@@ -75,7 +71,7 @@
                     }
                 },
                 {
-                    data: 'tahun',
+                    data: 'bulan',
                 },
                 {
                     data: 'Aksi',
@@ -84,5 +80,8 @@
         })
     }
 </script>
+
+@endpush
+@push('addon-script')
 
 @endpush

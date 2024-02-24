@@ -57,9 +57,13 @@ Route::middleware(['staff', 'auth'])->group(function () {
     Route::get('/staff/dataPesertaPensiun/{id}/{tahun}', [DapenController::class, 'getDataByTahun'])->name('staffDataPensiunByTahun');
     Route::get('/staff/dataPesertaPensiun/{id}/{tahun}/{bulan}', [DapenController::class, 'getDataByBulan'])->name('staffDataPensiunByBulan');
     Route::get('/staff/export_excel/{id}/{tahun}/{bulan}', [DapenController::class, 'export_excel']);
-    Route::post('/staff/dataPesertaPensiun/show', [DapenController::class, 'index'])->name('staffDataPensiun_show');
-    // Route::post('/staff/dataPesertaPensiun/{id}/export', [DapenController::class, 'export'])->name('staffDataPensiun_export');
-    Route::get('/staff/dataPesertaPensiunexport', [DapenController::class, 'export'])->name('staffDataPensiun_export');
+    Route::post('/staff/dataPesertaPensiun/{id}/{tahun}/{bulan}/show', [DapenController::class, 'index'])->name('staffDataPensiunByBulan_show');
+    
+    Route::get('/staff/verifikasi', [VerifikasiBerkasController::class, 'index2'])->name('verifikasi');
+    Route::get('/staff/verifikasi/{tahun}', [VerifikasiBerkasController::class, 'getDataByTahun2']);
+    Route::get('/staff/verifikasi/{tahun}/{bulan}', [VerifikasiBerkasController::class, 'getDataByInstansi']);
+    Route::post('/staff/verifikasi/{tahun}/{bulan}/show', [VerifikasiBerkasController::class, 'show2']);
+    Route::post('/staff/verifikasi/{tahun}/{bulan}/verifikasi', [VerifikasiBerkasController::class, 'verifikasi']);
 });
 
 // Menu Mitra
@@ -73,10 +77,10 @@ Route::middleware(['mitra', 'auth'])->group(function () {
     Route::get('/mitra/dataPensiun', [MitraController::class, 'index_2'])->name('dataPensiun');
     Route::get('/mitra/dataPensiun/{id}', [MitraController::class, 'getDataById'])->name('dataPensiunById');
     Route::get('/mitra/dataPensiun/{id}/{bulan}', [MitraController::class, 'getDataByBulan'])->name('dataPensiunByBulan');
-    Route::post('/mitra/dataPensiun/store', [MitraController::class, 'store_2'])->name('dataPensiun_tambah');
-    Route::post('/mitra/dataPensiun/show', [MitraController::class, 'show_2'])->name('dataPensiun_show');
-    Route::post('/mitra/dataPensiun/update', [MitraController::class, 'update_2'])->name('dataPensiun_update');
-    Route::post('/mitra/dataPensiun/destroy', [MitraController::class, 'destroy_2'])->name('dataPensiun_destroy');
+    Route::post('/mitra/dataPensiun/{id}/{bulan}/store', [MitraController::class, 'store_2'])->name('dataPensiun_tambah');
+    Route::post('/mitra/dataPensiun/{id}/{bulan}/show', [MitraController::class, 'show_2'])->name('dataPensiun_show');
+    Route::post('/mitra/dataPensiun/{id}/{bulan}/update', [MitraController::class, 'update_2'])->name('dataPensiun_update');
+    Route::post('/mitra/dataPensiun/{id}/{bulan}/destroy', [MitraController::class, 'destroy_2'])->name('dataPensiun_destroy');
     Route::post('/mitra/pesertaPensiun/import', [MitraController::class, 'import'])->name('dataPesertaPensiun_import');
 
     Route::get('/mitra/uploadBuktiPembayaran', [VerifikasiBerkasController::class, 'index'])->name('uploadBuktiPembayaran');

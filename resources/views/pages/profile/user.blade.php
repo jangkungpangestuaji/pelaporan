@@ -21,9 +21,9 @@
                 </div>
             </div>
             <div class="section-body">
-                <h2 class="section-title">Hi, Ujang!</h2>
+                <h2 class="section-title">Hi, {{$nama}}</h2>
                 <p class="section-lead">
-                    Change information about yourself on this page.
+                    Mohon untuk melengkapi formulir dibawah.
                 </p>
 
                 <div class="row mt-sm-4">
@@ -35,8 +35,8 @@
                                     class="rounded-circle profile-widget-picture">
                                 <div class="profile-widget-items">
                                     <div class="profile-widget-item">
-                                        <div class="profile-widget-item-label">Posts</div>
-                                        <div class="profile-widget-item-value">187</div>
+                                        <div class="profile-widget-item-label">Peserta</div>
+                                        <div class="profile-widget-item-value">{{$jml_peserta}}</div>
                                     </div>
                                     <div class="profile-widget-item">
                                         <div class="profile-widget-item-label">Followers</div>
@@ -49,9 +49,9 @@
                                 </div>
                             </div>
                             <div class="profile-widget-description">
-                                <div class="profile-widget-name">Ujang Maman <div
+                                <div class="profile-widget-name">{{$nama}}<div
                                         class="text-muted d-inline font-weight-normal">
-                                        <div class="slash"></div> Web Developer
+                                        <div class="slash"></div> {{$instansi}}
                                     </div>
                                 </div>
                                 Ujang maman is a superhero name in <b>Indonesia</b>, especially in my family. He is not a

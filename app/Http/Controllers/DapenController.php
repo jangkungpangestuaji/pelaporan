@@ -19,7 +19,7 @@ class DapenController extends Controller
     {
         $dataInstansi = DB::table('instansi')->orderBy('id', 'asc')->where('id', '!=', '1')->get();
         $array = ([
-            'type_menu' => 'data-pensiun',
+            'type_menu' => 'dataPesertaPensiun',
             'dataInstansi' => $dataInstansi,
         ]);
         if (request()->ajax()) {
@@ -44,10 +44,15 @@ class DapenController extends Controller
     }
     public function getDataByInstansi($id)
     {
+        $currentYear = date('Y');
+        if (!Tahun::where('tahun', $currentYear)->exists()) {
+            // Tambahkan data tahun baru
+            Tahun::insert(['tahun' => $currentYear]);
+        }
         $dataTahun = DB::table('tahun')->orderBy('tahun', 'asc')->get();
         $array = ([
             'instansi_id' => $id,
-            'type_menu' => 'kelola-tahun',
+            'type_menu' => 'dataPesertaPensiun',
             'dataTahun' => $dataTahun
         ]);
         if (request()->ajax()) {
@@ -69,17 +74,12 @@ class DapenController extends Controller
     }
     public function getDataByTahun($id, $tahun)
     {
-        // $results = DB::table('bulan')
-        // ->leftJoin('peserta', 'peserta.id', '=', 'data_iuran.peserta_id')
-        // ->select('peserta.id', 'peserta.instansi_id', 'peserta.no_peserta', 'peserta.nik', 'peserta.nama', 'data_iuran.bulan_id', 'data_iuran.gaji_pokok', 'data_iuran.adj_gapok', 'data_iuran.in_peserta', 'data_iuran.rapel_in_peserta', 'data_iuran.in_pk', 'data_iuran.rapel_in_pk', 'data_iuran.jumlah')
-        // ->where('peserta.instansi_id', '=', $id)
-        // ->get();
         $results = DB::table('bulan')
             ->select('*')
             ->get();
 
         $array = [
-            'type_menu' => 'data-pensiun',
+            'type_menu' => 'dataPesertaPensiun',
             'results' => $results,
             'tahun' => $tahun,
             'instansi_id' => $id
@@ -146,41 +146,6 @@ class DapenController extends Controller
     {
         return Excel::download(new DapenExport($instansi_id, $tahun, $bulan), 'dapen.xlsx');
     }
-    public function store(Request $request)
-    {
-        $request->validate(
-            [
-                'tahun' => 'required',
-            ],
-        );
-        $data = new Tahun;
-        $data->tahun = $request->tahun;
-        $data->save();
-    }
-    public function show_2(Request $request)
-    {
-        $id = $request->id;
-
-        $data = Tahun::find($id);
-        return response()->json(['data' => $data]);
-    }
-    public function update(Request $request)
-    {
-        $id = $request->id;
-
-        $data = Tahun::find($id);
-        $data->save();
-        return response()->json(['data' => $data]);
-    }
-    public function destroy(Request $request)
-    {
-        $id = $request->id;
-
-        $data = Tahun::find($id);
-        $data->delete();
-        return response()->json(['data' => $data]);
-    }
-
     public function show(Request $request)
     {
         $id = $request->id;

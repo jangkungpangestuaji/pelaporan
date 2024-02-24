@@ -13,13 +13,14 @@ class DataIuran extends Model
     protected $table = 'data_iuran';
 
     protected $fillable = [
-        'nama_bulan',
+        'peserta_id',
         'gaji_pokok',
         'adj_gapok',
         'in_peserta',
         'rapel_in_peserta',
         'in_pk',
         'rapel_in_pk',
+        'jumlah',
     ];
 
     public function peserta(): BelongsTo

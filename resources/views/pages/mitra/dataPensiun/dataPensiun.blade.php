@@ -31,10 +31,9 @@
                     <thead>
                         <tr class="text-center">
                             <th>No</th>
-                            <th>Bulan</th>
                             <th>No Peserta</th>
                             <th>NIK</th>
-                            <th>Nama</th>
+                            <th >Nama</th>
                             <th>Gaji Pokok</th>
                             <th>Adj. Gaji Pokok</th>
                             <th>IN Pst</th>
@@ -42,7 +41,7 @@
                             <th>IN PK</th>
                             <th>RAPEL IN PK</th>
                             <th>Jumlah</th>
-                            <th>Aksi</th>
+                            <th class="text-center" >Aksi</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -65,24 +64,6 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <div class="form-group hidden">
-                        <label for="nama_bulan">Bulan</label>
-                        <select name="nama_bulan" class="form-control rounded-0 @error('nama_bulan') is-invalid @enderror" id="nama_bulan">
-                            <option value="">-- BULAN --</option>
-                            <option value="Januari">Januari</option>
-                            <option value="Februari">Februari</option>
-                            <option value="Maret">Maret</option>
-                            <option value="April">April</option>
-                            <option value="Mei">Mei</option>
-                            <option value="Juni">Juni</option>
-                            <option value="Juli">Juli</option>
-                            <option value="Agustus">Agustus</option>
-                            <option value="September">September</option>
-                            <option value="Oktober">Oktober</option>
-                            <option value="November">November</option>
-                            <option value="Desember">Desember</option>
-                        </select>
-                    </div>
                     <div class="form-group hidden">
                         <label for="peserta">Peserta</label>
                         <select name="peserta" class="form-control rounded-0 @error('peserta') is-invalid @enderror" id="peserta">
@@ -120,11 +101,7 @@
                         <label for="jumlah">Jumlah</label>
                         <input type="text" class="form-control rounded-0 @error('jumlah') is-invalid @enderror" id="jumlah" name="jumlah" value="" placeholder="">
                     </div>
-                    <div class="form-group hidden">
-                        <label for="jumlah">Jumlah</label>
-                        <input type="text" class="form-control rounded-0 @error('jumlah') is-invalid @enderror" id="jumlah" name="jumlah" value="" placeholder="">
-                    </div>
-                    <div class="form-group">
+                    <div class="form-group unhidden">
                         <label for="file">Import</label>
                         <input type="file" class="form-control rounded-0 @error('file') is-invalid @enderror" id="file" name="file" value="" placeholder="">
                     </div>
@@ -145,7 +122,6 @@
 <script src="{{ asset('library/sweetalert/dist/sweetalert.min.js') }}"></script>
 <!-- Page Specific JS File -->
 
-
 <script>
     $(document).ready(function() {
         // Memuat data baru setelah instansi DataTable dihancurkan
@@ -156,6 +132,7 @@
         $('#bulan').DataTable({
             serverside: true,
             responsive: true,
+            scrollX: true,
             ajax: {
                 url: "{{url()->current()}}"
             },
@@ -165,9 +142,6 @@
                     render: function(data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1
                     }
-                },
-                {
-                    data: 'bulan',
                 },
                 {
                     data: 'no_peserta',
@@ -244,11 +218,10 @@
     function tambah() {
         $('#simpan').text('Simpan')
         $.ajax({
-            url: "{{ route('dataPensiun_tambah') }}",
+            url: "{{url()->current()}}/store",
             type: "POST",
             data: {
                 peserta_id: $('#peserta').val(),
-                nama_bulan: $('#nama_bulan').val(),
                 gaji_pokok: $('#gaji_pokok').val(),
                 adj_gapok: $('#adj_gapok').val(),
                 in_peserta: $('#in_peserta').val(),
@@ -260,7 +233,7 @@
             },
             success: function(res) {
                 console.log(res);
-                $("#bulan1").DataTable().ajax.reload();
+                $("#bulan").DataTable().ajax.reload();
                 // alert
                 Swal.fire(
                     'Sukses',
@@ -291,14 +264,14 @@
         formData.append('_token', '{{ csrf_token() }}');
 
         $.ajax({
-            url: "{{ route('dataPesertaPensiun_import') }}",
+            url: "{{route ('dataPesertaPensiun_import')}}",
             type: "POST",
             data: formData,
             processData: false, // Set false agar jQuery tidak memproses FormData secara otomatis
             contentType: false, // Set false agar jQuery tidak menambahkan header Content-Type
             success: function(res) {
                 console.log(res);
-                $("#bulan1").DataTable().ajax.reload();
+                $("#bulan").DataTable().ajax.reload();
                 // alert
                 Swal.fire(
                     'Sukses',
@@ -327,7 +300,7 @@
         $("#simpan").removeClass("btn btn-primary")
         $("#simpan").addClass("btn btn-warning")
         $.ajax({
-            url: "{{ route('uploadBuktiPembayaranByTahun_show') }}",
+            url: "{{url()->current()}}/show",
             type: 'POST',
             data: {
                 id: id,
@@ -336,7 +309,6 @@
             success: function(res) {
                 $("#modalTambah [name='id']").val(res.data.id)
                 $("#modalTambah [name='peserta']").val(res.data.peserta_id)
-                $("#modalTambah [name='nama_bulan']").val(res.data.nama_bulan)
                 $("#modalTambah [name='gaji_pokok']").val(res.data.gaji_pokok)
                 $("#modalTambah [name='adj_gapok']").val(res.data.adj_gapok)
                 $("#modalTambah [name='in_peserta']").val(res.data.in_peserta)
@@ -350,7 +322,7 @@
 
     function update() {
         $.ajax({
-            url: "{{ route('dataPensiun_update') }}",
+            url: "{{url()->current()}}/update",
             type: "POST",
             data: {
                 id: $('#id').val(),
@@ -367,7 +339,7 @@
             },
             success: function(res) {
                 console.log(res);
-                $("#bulan1").DataTable().ajax.reload();
+                $("#bulan").DataTable().ajax.reload();
                 // alert
                 Swal.fire(
                     'Sukses',
@@ -420,14 +392,14 @@
 
                 let id = $(this).attr('id')
                 $.ajax({
-                    url: "{{ route('dataPensiun_destroy') }}",
+                    url: "{{url()->current()}}/destroy",
                     type: 'POST',
                     data: {
                         id: id,
                         "_token": "{{ csrf_token() }}"
                     },
                     success: function() {
-                        $("#bulan1").DataTable().ajax.reload();
+                        $("#bulan").DataTable().ajax.reload();
                     }
                 })
             }

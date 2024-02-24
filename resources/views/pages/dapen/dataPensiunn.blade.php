@@ -55,6 +55,7 @@
         </div>
     </section>
 </div>
+@endsection
 
 @push('scripts')
 <!-- JS Libraies -->
