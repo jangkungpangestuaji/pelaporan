@@ -12,6 +12,10 @@
     <section class="section">
         <div class="section-header">
             <h1>Kelola Akun</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
+                <div class="breadcrumb-item">Kelola Akun</div>
+            </div>
         </div>
 
         <!-- Tabel Akun -->
@@ -23,7 +27,7 @@
                             <h4>Daftar Akun Mitra</h4>
                         </div>
                         <div class="col btn-group">
-                            <button href="#" class="btn btn-secondary" data-toggle="modal" id="tambah" data-target="#modalTambah">Tambah Akun</button>
+                            <button href="#" class="btn btn-primary" data-toggle="modal" id="tambah" data-target="#modalTambah">Tambah Akun</button>
                             <!-- <a href="#" class="btn btn-warning">Import Excel</a> -->
                         </div>
                     </div>
@@ -139,7 +143,7 @@
                     data: 'email',
                 },
                 {
-                    data: 'instansi_id',
+                    data: 'nama_instansi',
                 },
                 {
                     data: 'level',
@@ -158,8 +162,6 @@
         $('#simpan').text('Simpan')
         $('#form-password').removeAttr("hidden")
         $('#judul_modal').text('Tambah Data Baru');
-        $("#modalTambah [name='name']").val('')
-        $("#modalTambah [name='noPeserta']").val('')
     })
 
     // Tambah Data

@@ -31,9 +31,9 @@
                     <thead>
                         <tr class="text-center">
                             <th>No</th>
-                            <th>No Peserta</th>
+                            <th>No Peserta Aktif</th>
                             <th>NIK</th>
-                            <th >Nama</th>
+                            <th>Nama Peserta Aktif</th>
                             <th>Gaji Pokok</th>
                             <th>Adj. Gaji Pokok</th>
                             <th>IN Pst</th>
@@ -80,26 +80,6 @@
                     <div class="form-group hidden">
                         <label for="adj_gapok">Adj. Gapok</label>
                         <input type="text" class="form-control rounded-0 @error('adj_gapok') is-invalid @enderror" id="adj_gapok" name="adj_gapok" value="" placeholder="">
-                    </div>
-                    <div class="form-group hidden">
-                        <label for="in_peserta">IN Peserta</label>
-                        <input type="text" class="form-control rounded-0 @error('in_peserta') is-invalid @enderror" id="in_peserta" name="in_peserta" value="" placeholder="">
-                    </div>
-                    <div class="form-group hidden">
-                        <label for="rapel_in_peserta">Rapel IN Peserta</label>
-                        <input type="text" class="form-control rounded-0 @error('rapel_in_peserta') is-invalid @enderror" id="rapel_in_peserta" name="rapel_in_peserta" value="" placeholder="">
-                    </div>
-                    <div class="form-group hidden">
-                        <label for="in_pk">IN PK</label>
-                        <input type="text" class="form-control rounded-0 @error('in_pk') is-invalid @enderror" id="in_pk" name="in_pk" value="" placeholder="">
-                    </div>
-                    <div class="form-group hidden">
-                        <label for="rapel_in_pk">RAPEL IN PK</label>
-                        <input type="text" class="form-control rounded-0 @error('rapel_in_pk') is-invalid @enderror" id="rapel_in_pk" name="rapel_in_pk" value="" placeholder="">
-                    </div>
-                    <div class="form-group hidden">
-                        <label for="jumlah">Jumlah</label>
-                        <input type="text" class="form-control rounded-0 @error('jumlah') is-invalid @enderror" id="jumlah" name="jumlah" value="" placeholder="">
                     </div>
                     <div class="form-group unhidden">
                         <label for="file">Import</label>
@@ -186,8 +166,6 @@
         $("#simpan").addClass("btn btn-primary")
         $('#simpan').text('Simpan')
         $('#judul_modal').text('Tambah Data Baru');
-        $("#modalTambah [name='nama']").val('')
-        $("#modalTambah [name='noPeserta']").val('')
         $(".unhidden").attr('hidden', true)
         $(".hidden").removeAttr('hidden', true)
     })
@@ -224,11 +202,6 @@
                 peserta_id: $('#peserta').val(),
                 gaji_pokok: $('#gaji_pokok').val(),
                 adj_gapok: $('#adj_gapok').val(),
-                in_peserta: $('#in_peserta').val(),
-                rapel_in_peserta: $('#rapel_in_peserta').val(),
-                in_pk: $('#in_pk').val(),
-                rapel_in_pk: $('#rapel_in_pk').val(),
-                jumlah: $('#jumlah').val(),
                 "_token": "{{ csrf_token() }}"
             },
             success: function(res) {
@@ -241,9 +214,6 @@
                     'success'
                 );
                 $("#modalTambah .close").click();
-                $("#modalTambah [name='noPeserta']").val('');
-                $("#modalTambah [name='nik']").val('');
-                $("#modalTambah [name='nama']").val('');
             },
             error: function(err) {
                 console.log(err)
@@ -264,7 +234,7 @@
         formData.append('_token', '{{ csrf_token() }}');
 
         $.ajax({
-            url: "{{route ('dataPesertaPensiun_import')}}",
+            url: "{{url()->current()}}/import",
             type: "POST",
             data: formData,
             processData: false, // Set false agar jQuery tidak memproses FormData secara otomatis
@@ -311,11 +281,6 @@
                 $("#modalTambah [name='peserta']").val(res.data.peserta_id)
                 $("#modalTambah [name='gaji_pokok']").val(res.data.gaji_pokok)
                 $("#modalTambah [name='adj_gapok']").val(res.data.adj_gapok)
-                $("#modalTambah [name='in_peserta']").val(res.data.in_peserta)
-                $("#modalTambah [name='rapel_in_peserta']").val(res.data.rapel_in_peserta)
-                $("#modalTambah [name='in_pk']").val(res.data.in_pk)
-                $("#modalTambah [name='rapel_in_pk']").val(res.data.rapel_in_pk)
-                $("#modalTambah [name='jumlah']").val(res.data.jumlah)
             }
         })
     })
@@ -330,11 +295,6 @@
                 nama_bulan: $('#nama_bulan').val(),
                 gaji_pokok: $('#gaji_pokok').val(),
                 adj_gapok: $('#adj_gapok').val(),
-                in_peserta: $('#in_peserta').val(),
-                rapel_in_peserta: $('#rapel_in_peserta').val(),
-                in_pk: $('#in_pk').val(),
-                rapel_in_pk: $('#rapel_in_pk').val(),
-                jumlah: $('#jumlah').val(),
                 "_token": "{{ csrf_token() }}"
             },
             success: function(res) {
@@ -351,11 +311,6 @@
                 $("#modalTambah [name='nama_bulan']").val('');
                 $("#modalTambah [name='gaji_pokok']").val('');
                 $("#modalTambah [name='adj_gapok']").val('');
-                $("#modalTambah [name='in_peserta']").val('');
-                $("#modalTambah [name='rapel_in_peserta']").val('');
-                $("#modalTambah [name='in_pk']").val('');
-                $("#modalTambah [name='rapel_in_pk']").val('');
-                $("#modalTambah [name='jumlah']").val('');
                 $('#simpan').text('Simpan');
             },
             error: function(err) {

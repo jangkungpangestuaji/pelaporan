@@ -17,28 +17,22 @@ class AdminController extends Controller
     }
     public function index()
     {
-        $type_menu = ([
-            'type_menu' => 'bootstrap',
-        ]);
-        $dataInstansi = Instansi::orderBy('id', 'desc')->get();
-        $dataUser = User::orderBy('id', 'desc')->get();
+        $dataUser = User::select('users.id', 'users.name', 'users.username', 'users.email', 'users.phone', 'users.level', 'instansi.nama_instansi')
+            ->orderBy('users.id', 'desc')
+            ->leftJoin('instansi', 'instansi.id', '=', 'users.instansi_id')
+            ->get();
+        $dataInstansi = Instansi::get();
+
         $array = [
             'dataInstansi' => $dataInstansi,
-            'type_menu' => $type_menu,
             'dataUser' => $dataUser,
         ];
         if (request()->ajax()) {
-            // return DataTables()->of($dataUser)->make(true);
             return datatables()->of($dataUser)
                 ->addColumn('Aksi', function ($dataUser) {
                     $button = "
-                <button type='button' id='" . $dataUser->id . "' class='update btn btn-warning'  >
-                    <i class='fas fa-edit'></i>
-                </button>";
-
-                    $button = "
                 <button type='button' id='" . $dataUser->id . "' class='destroy btn btn-danger'>
-                    <i class='fas fa-times'></i>
+                    Hapus
                 </button>";
 
                     return $button;
@@ -120,7 +114,6 @@ class AdminController extends Controller
     public function destroy(Request $request)
     {
         $id = $request->id;
-
         $data = User::find($id);
         $data->delete();
         return response()->json(['data' => $data]);

@@ -70,31 +70,6 @@ class MitraController extends Controller
         }
         return view('pages.mitra.dataPensiun.dataPerTahun', compact('data'));
     }
-    public function index_3()
-    {
-        $currentYear = date('Y');
-        // dd($currentYear);
-        if (!Tahun::where('tahun', $currentYear)->exists()) {
-            // Tambahkan data tahun baru
-            Tahun::insert(['tahun' => $currentYear]);
-        }
-        $data = Tahun::orderBy('id', 'desc')->get();
-        if (request()->ajax()) {
-            return datatables()->of($data)
-                ->addColumn('Aksi', function ($data) {
-                    $button = "
-                    <a href='/mitra/uploadBuktiPembayaran/{$data->id}'>
-                    <button type='button' id='" . $data->id . "' class='update btn btn-warning'  >
-                        Buka
-                    </button>
-                    </a>";
-                    return $button;
-                })
-                ->rawColumns(['Aksi'])
-                ->make(true);
-        }
-        return view('pages.mitra.upload.dataPerTahun', compact('data'));
-    }
     public function getDataById($id)
     {
         $data = DB::table('bulan')->get();
@@ -167,30 +142,21 @@ class MitraController extends Controller
     }
     public function store_2(Request $request, $tahun, $bulan)
     {
-        $request->validate(
-            [
-                'peserta_id' => 'required',
-                'gaji_pokok' => 'required',
-                'adj_gapok' => 'required',
-                'in_peserta' => 'required',
-                'rapel_in_peserta' => 'required',
-                'in_pk' => 'required',
-                'rapel_in_pk' => 'required',
-                'jumlah' => 'required',
-            ]
-        );
+        if ($request->adj_gapok == null) {
+            $adj_gapok = 0;
+        }
         $data = new DataIuran;
         $data->tahun_id = $tahun;
         $data->bulan_id = $bulan;
         $data->peserta_id = $request->peserta_id;
         $data->gaji_pokok = $request->gaji_pokok;
-        $data->adj_gapok = $request->adj_gapok;
-        $data->in_peserta = $request->in_peserta;
-        $data->rapel_in_peserta = $request->rapel_in_peserta;
-        $data->in_pk = $request->in_pk;
-        $data->rapel_in_pk = $request->rapel_in_pk;
-        $data->jumlah = $request->jumlah;
-        // dd($data);
+        $data->adj_gapok = $adj_gapok;
+
+        $data->in_peserta = ceil(($request->gaji_pokok) * 5 / 100);
+        $data->rapel_in_peserta = ceil(($adj_gapok) * 5 / 100);
+        $data->in_pk = ceil(($request->gaji_pokok) * 11.7 / 100);
+        $data->rapel_in_pk = ceil(($adj_gapok) * 11.7 / 100);
+        $data->jumlah = ($data->in_peserta + $data->rapel_in_peserta + $data->in_pk + $data->rapel_in_pk);
 
         $data->save();
     }
@@ -232,20 +198,26 @@ class MitraController extends Controller
     public function update_2(Request $request)
     {
         $id = $request->id;
+        if ($request->adj_gapok == null) {
+            $adj_gapok = 0;
+        } else{
+            $adj_gapok = $request->adj_gapok;
+        }
         $update = [
             'peserta_id' => $request->peserta_id,
             'gaji_pokok' => $request->gaji_pokok,
-            'adj_gapok' => $request->adj_gapok,
-            'in_peserta' => $request->in_peserta,
-            'rapel_in_peserta' => $request->rapel_in_peserta,
-            'in_pk' => $request->in_pk,
-            'rapel_in_pk' => $request->rapel_in_pk,
-            'jumlah' => $request->jumlah,
+            'adj_gapok' => $adj_gapok,
+            'in_peserta' => ceil(($request->gaji_pokok) * 5 / 100),
+            'rapel_in_peserta' => ceil(($adj_gapok) * 5 / 100),
+            'in_pk' => ceil(($request->gaji_pokok) * 11.7 / 100),
+            'rapel_in_pk' => ceil(($adj_gapok) * 11.7 / 100),
+            'jumlah' => (ceil(($request->gaji_pokok) * 5 / 100) + ceil(($adj_gapok) * 5 / 100) + ceil(($request->gaji_pokok) * 11.7 / 100) + ceil(($adj_gapok) * 11.7 / 100)),
         ];
 
         $data = DataIuran::find($id);
         $data->update($update);
         $data->save();
+
         return response()->json(['data' => $data]);
     }
     public function destroy(Request $request)
@@ -264,14 +236,13 @@ class MitraController extends Controller
 
         return response()->json(['data' => $data]);
     }
-    public function import(Request $request)
+    public function import(Request $request, $tahun, $bulan)
     {
         $request->validate([
             'file' => 'required|file|mimes:csv,xlsx,xls', // Validasi tipe file
         ]);
         $file = $request->file('file');
-        // dd($file);
-        Excel::import(new DapenImport, $file);
+        Excel::import(new DapenImport($tahun, $bulan), $file);
 
         return redirect()->back()->with('success', 'All good!');
     }

@@ -17,7 +17,10 @@ class DapenController extends Controller
     }
     public function index()
     {
-        $dataInstansi = DB::table('instansi')->orderBy('id', 'asc')->where('id', '!=', '1')->get();
+        $dataInstansi = DB::table('instansi')
+            ->orderBy('id', 'asc')
+            ->where('id', '!=', '1')
+            ->get();
         $array = ([
             'type_menu' => 'dataPesertaPensiun',
             'dataInstansi' => $dataInstansi,
@@ -30,7 +33,7 @@ class DapenController extends Controller
                     // dd($dataInstansi);
                     $button = "
                     <a href='/staff/dataPesertaPensiun/{$dataInstansi->id}'>
-                    <button type='button' id='" . $dataInstansi->id . "' class='show-data btn btn-warning' >
+                    <button type='button' id='" . $dataInstansi->id . "' class='show-data btn btn-primary' >
                     Buka
                     </button>
                     </a>";
@@ -60,7 +63,7 @@ class DapenController extends Controller
                 ->addColumn('Aksi', function ($row) use ($array) {
                     $button = "
                     <a href='/staff/dataPesertaPensiun/{$array['instansi_id']}/{$row->id}'>
-                    <button type='button' id='" . $row->id . "' class='update btn btn-warning mb-2' >
+                    <button type='button' id='" . $row->id . "' class='update btn btn-primary mb-2' >
                     Buka
                     </button>
                     </a>";
@@ -91,7 +94,7 @@ class DapenController extends Controller
                 ->addColumn('Aksi', function ($row) use ($array) {
                     $button = "
                     <a href='/staff/dataPesertaPensiun/{$array['instansi_id']}/{$array['tahun']}/{$row->id}'>
-                    <button type='button' id='" . $row->id . "' class='update btn btn-warning mb-2' >
+                    <button type='button' id='" . $row->id . "' class='update btn btn-primary mb-2' >
                     Buka
                     </button>
                     </a>";

@@ -23,7 +23,7 @@
                             <h4>Daftar Instansi</h4>
                         </div>
                         <div class="col btn-group">
-                            <button href="#" class="btn btn-secondary" data-toggle="modal" id="tambah" data-target="#modalTambah">Tambah Akun</button>
+                            <button href="#" class="btn btn-primary" data-toggle="modal" id="tambah" data-target="#modalTambah">Tambah Akun</button>
                             <!-- <a href="#" class="btn btn-warning">Import Excel</a> -->
                         </div>
                     </div>

@@ -21,9 +21,6 @@
                         <div class="col-10">
                             <h4>Tabel Tahun</h4>
                         </div>
-                        <div class="col btn-group">
-                            <button href="#" class="btn btn-secondary" data-toggle="modal" id="tambah" data-target="#modalTambah">Tambah Tahun</button>
-                        </div>
                     </div>
                 </div>
                 <div class="accordion" id="accordionExample">

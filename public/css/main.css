@@ -1,0 +1,13 @@
+nav form ul li a{
+    color: #23AAE2 !important;
+}
+nav form ul li a:hover{
+    color: #437990 !important;
+}
+
+nav ul li a{
+    color: #878E95 !important;
+}
+nav ul li a:hover{
+    color: #555555 !important;
+}

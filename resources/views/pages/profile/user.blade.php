@@ -3,169 +3,174 @@
 @section('title', 'Profile')
 
 @push('style')
-    <!-- CSS Libraries -->
-    <link rel="stylesheet"
-        href="{{ asset('library/summernote/dist/summernote-bs4.css') }}">
-    <link rel="stylesheet"
-        href="{{ asset('library/bootstrap-social/assets/css/bootstrap.css') }}">
+<!-- CSS Libraries -->
+<link rel="stylesheet" href="{{ asset('library/summernote/dist/summernote-bs4.css') }}">
+<link rel="stylesheet" href="{{ asset('library/bootstrap-social/assets/css/bootstrap.css') }}">
 @endpush
 
 @section('main')
-    <div class="main-content">
-        <section class="section">
-            <div class="section-header">
-                <h1>Profile</h1>
-                <div class="section-header-breadcrumb">
-                    <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
-                    <div class="breadcrumb-item">Profile</div>
-                </div>
+<div class="main-content">
+    <section class="section">
+        <div class="section-header">
+            <h1>Profile</h1>
+            <div class="section-header-breadcrumb">
+                <div class="breadcrumb-item active"><a href="#">Dashboard</a></div>
+                <div class="breadcrumb-item">Profile</div>
             </div>
-            <div class="section-body">
-                <h2 class="section-title">Hi, {{$nama}}</h2>
-                <p class="section-lead">
-                    Mohon untuk melengkapi formulir dibawah.
-                </p>
+        </div>
+        <div class="section-body">
+            <h2 class="section-title">Hi, {{$nama}}</h2>
+            <p class="section-lead">
+                Mohon untuk melengkapi formulir dibawah.
+            </p>
 
-                <div class="row mt-sm-4">
-                    <div class="col-12 col-md-12 col-lg-5">
-                        <div class="card profile-widget">
-                            <div class="profile-widget-header">
-                                <img alt="image"
-                                    src="{{ asset('img/avatar/avatar-1.png') }}"
-                                    class="rounded-circle profile-widget-picture">
-                                <div class="profile-widget-items">
-                                    <div class="profile-widget-item">
-                                        <div class="profile-widget-item-label">Peserta</div>
-                                        <div class="profile-widget-item-value">{{$jml_peserta}}</div>
-                                    </div>
-                                    <div class="profile-widget-item">
-                                        <div class="profile-widget-item-label">Followers</div>
-                                        <div class="profile-widget-item-value">6,8K</div>
-                                    </div>
-                                    <div class="profile-widget-item">
-                                        <div class="profile-widget-item-label">Following</div>
-                                        <div class="profile-widget-item-value">2,1K</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="profile-widget-description">
-                                <div class="profile-widget-name">{{$nama}}<div
-                                        class="text-muted d-inline font-weight-normal">
-                                        <div class="slash"></div> {{$instansi}}
-                                    </div>
-                                </div>
-                                Ujang maman is a superhero name in <b>Indonesia</b>, especially in my family. He is not a
-                                fictional character but an original hero in my family, a hero for his children and for his
-                                wife. So, I use the name as a user in this template. Not a tribute, I'm just bored with
-                                <b>'John Doe'</b>.
-                            </div>
-                            <div class="card-footer text-center">
-                                <div class="font-weight-bold mb-2">Follow Ujang On</div>
-                                <a href="#"
-                                    class="btn btn-social-icon btn-facebook mr-1">
-                                    <i class="fab fa-facebook-f"></i>
-                                </a>
-                                <a href="#"
-                                    class="btn btn-social-icon btn-twitter mr-1">
-                                    <i class="fab fa-twitter"></i>
-                                </a>
-                                <a href="#"
-                                    class="btn btn-social-icon btn-github mr-1">
-                                    <i class="fab fa-github"></i>
-                                </a>
-                                <a href="#"
-                                    class="btn btn-social-icon btn-instagram">
-                                    <i class="fab fa-instagram"></i>
-                                </a>
-                            </div>
+            <div class="row mt-sm-4">
+                <div class="col-12 col-md-12 col-lg-5">
+                    <div class="card profile-widget">
+                        <div class="profile-widget-header">
+                            <img alt="image" src="{{ asset('img/avatar/avatar-1.png') }}" class="rounded-circle profile-widget-picture">
                         </div>
-                    </div>
-                    <div class="col-12 col-md-12 col-lg-7">
-                        <div class="card">
-                            <form method="post"
-                                class="needs-validation"
-                                novalidate="">
-                                <div class="card-header">
-                                    <h4>Edit Profile</h4>
+                        <div class="profile-widget-description">
+                            <div class="profile-widget-name" id="profile-nama">{{$nama}}
+                                <div class="text-muted d-inline font-weight-normal">
+                                    <div class="slash"></div> {{$instansi}}
                                 </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="form-group col-md-6 col-12">
-                                            <label>First Name</label>
-                                            <input type="text"
-                                                class="form-control"
-                                                value="Ujang"
-                                                required="">
-                                            <div class="invalid-feedback">
-                                                Please fill in the first name
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-6 col-12">
-                                            <label>Last Name</label>
-                                            <input type="text"
-                                                class="form-control"
-                                                value="Maman"
-                                                required="">
-                                            <div class="invalid-feedback">
-                                                Please fill in the last name
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-md-7 col-12">
-                                            <label>Email</label>
-                                            <input type="email"
-                                                class="form-control"
-                                                value="ujang@maman.com"
-                                                required="">
-                                            <div class="invalid-feedback">
-                                                Please fill in the email
-                                            </div>
-                                        </div>
-                                        <div class="form-group col-md-5 col-12">
-                                            <label>Phone</label>
-                                            <input type="tel"
-                                                class="form-control"
-                                                value="">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-12">
-                                            <label>Bio</label>
-                                            <textarea class="form-control summernote-simple">Ujang maman is a superhero name in <b>Indonesia</b>, especially in my family. He is not a fictional character but an original hero in my family, a hero for his children and for his wife. So, I use the name as a user in this template. Not a tribute, I'm just bored with <b>'John Doe'</b>.</textarea>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="form-group col-12 mb-0">
-                                            <div class="custom-control custom-checkbox">
-                                                <input type="checkbox"
-                                                    name="remember"
-                                                    class="custom-control-input"
-                                                    id="newsletter">
-                                                <label class="custom-control-label"
-                                                    for="newsletter">Subscribe to newsletter</label>
-                                                <div class="text-muted form-text">
-                                                    You will get new information about products, offers and promotions
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-footer text-right">
-                                    <button class="btn btn-primary">Save Changes</button>
-                                </div>
-                            </form>
+                            </div>
+                            <p id="profile-bio">
+                            </p>
                         </div>
                     </div>
                 </div>
+                <div class="col-12 col-md-12 col-lg-7">
+                    <div class="card">
+                        <form id="editProfileForm">
+                            @csrf
+                            <div class="card-header">
+                                <h4>Edit Profile</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="form-group col-md-5 col-12">
+                                        <label>Nama Lengkap</label>
+                                        <input type="text" id="id" name="id" class="form-control" value="" hidden>
+                                        <input type="text" id="name" name="name" class="form-control" value="" required="">
+                                        <div class="invalid-feedback">
+                                            Mohon untuk diisi!
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-7 col-12">
+                                        <label>Username</label>
+                                        <input type="text" id="username" name="username" class="form-control" value="">
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-md-7 col-12">
+                                        <label>Email</label>
+                                        <input type="email" id="email" name="email" class="form-control" value="" required="">
+                                        <div class="invalid-feedback">
+                                            Mohon untuk diisi!
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-md-5 col-12">
+                                        <label>Phone</label>
+                                        <input type="tel" id="phone" name="phone" class="form-control" value="" required="">
+                                        <div class="invalid-feedback">
+                                            Mohon untuk diisi!
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="form-group col-12">
+                                        <label>Bio</label>
+                                        <textarea id="bio" name="bio" class="form-control summernote-simple"></textarea>
+                                    </div>
+                                </div>
+                                <p class="text-danger">Peringatan : Hanya jika ingin diganti!</p>
+                                <div class="row">
+                                    <div class="form-group col-md-6 col-12">
+                                        <label>Password</label>
+                                        <input type="password" id="password" name="password" class="form-control" value="">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer text-right">
+                                <button class="btn btn-primary" id="simpan" type="submit">Simpan Perubahan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
+</div>
 @endsection
 
 @push('scripts')
-    <!-- JS Libraies -->
-    <script src="{{ asset('library/summernote/dist/summernote-bs4.js') }}"></script>
+<!-- JS Libraies -->
+<script src="{{ asset('library/summernote/dist/summernote-bs4.js') }}"></script>
+<script src="{{ asset('library/sweetalert/dist/sweetalert.min.js') }}"></script>
+<!-- Page Specific JS File -->
 
-    <!-- Page Specific JS File -->
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: '{{route("profile_show")}}', // Ganti dengan URL target Anda
+            type: 'POST',
+            data: {
+                id: '{{Auth::user()->id}}',
+                '_token': '{{ csrf_token() }}',
+            },
+            success: function(res) {
+                // Handle respons dari server di sini
+                console.log('Data berhasil diload');
+                $("#profile-bio").html(res.data.bio);
+                $("#editProfileForm [name='id']").val(res.data.id);
+                $("#editProfileForm [name='name']").val(res.data.name);
+                $("#editProfileForm [name='username']").val(res.data.username);
+                $("#editProfileForm [name='email']").val(res.data.email);
+                $("#editProfileForm [name='phone']").val(res.data.phone);
+                $("#editProfileForm [name='bio']").summernote('code', res.data.bio);
+
+            },
+            error: function(xhr, status, error) {
+                // Handle error di sini
+                console.error(error);
+                console.error('Terjadi kesalahan');
+            }
+        });
+
+        $('#editProfileForm').submit(function(e) {
+            e.preventDefault(); // Menghentikan pengiriman form standar
+
+            // Mengambil data dari form
+            var formData = $(this).serialize();
+
+            // Melakukan request AJAX untuk menyimpan perubahan
+            $.ajax({
+                url: '{{ route("profile_update") }}', // Ganti dengan URL target Anda
+                type: 'POST',
+                data: formData,
+                success: function(res) {
+                    // Handle respons dari server di sini
+                    console.log('Perubahan berhasil disimpan');
+                    // Tambahkan kode di sini untuk menampilkan pesan sukses atau melakukan tindakan setelah perubahan disimpan
+                    Swal.fire(
+                        'Sukses',
+                        'Data berhasil diperbarui',
+                        'success'
+                    );
+                    $("#editProfileForm [name='phone']").val(res.data.phone);
+                    $("#profile-nama").text(res.data.name);
+                    $("#profile-bio").html(res.data.bio);
+                },
+                error: function(xhr, status, error) {
+                    // Handle error di sini
+                    console.error(error);
+                    console.error('Terjadi kesalahan saat menyimpan perubahan');
+                    // Tambahkan kode di sini untuk menampilkan pesan error atau melakukan tindakan lainnya saat terjadi kesalahan
+                }
+            });
+        });
+    });
+</script>
 @endpush

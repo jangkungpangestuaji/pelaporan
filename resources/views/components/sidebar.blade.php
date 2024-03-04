@@ -42,7 +42,7 @@
                         <a class="nav-link" href="{{ route('dataPesertaPensiun')}}"> <span>Peserta Pensiun</span></a>
                     </li>
                     <li class="{{ Request::is('mitra/dataPensiun*') ? 'active' : '' }}">
-                        <a class="nav-link" href="{{ route('dataPensiun')}}"> <span>Data Pensiun</span></a>
+                        <a class="nav-link" href="{{ route('dataPensiun')}}"> <span>Iuran Pensiun</span></a>
                     </li>
                     <li class="{{ Request::is('mitra/uploadBuktiPembayaran*') ? 'active' : '' }}">
                         <a class="nav-link" href="{{ route('uploadBuktiPembayaran')}}"> <span>Upload Bukti Pembayaran</span></a>

@@ -32,7 +32,13 @@ class AuthController extends Controller
             'password' => 'required',
         ]);
 
-        if (Auth::attempt($validated)) {
+        // Ubah kolom 'username' menjadi 'email'
+        $credentials = [
+            'email' => $request->username,
+            'password' => $request->password,
+        ];
+
+        if (Auth::attempt($validated) or Auth::attempt($credentials)) {
             $request->session()->regenerate();
             $notification = array(
                 'status' => 'toast_success',

@@ -2,8 +2,6 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
-use App\Http\Controllers\CrudAjaxController;
-use App\Http\Controllers\CrudController;
 use App\Http\Controllers\DapenController;
 use App\Http\Controllers\VerifikasiBerkasController;
 use App\Http\Controllers\MitraController;
@@ -31,9 +29,6 @@ Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::get('/home', function () {
     return view('pages.home', ['type_menu' => 'dashboard']);
 })->middleware('auth');
-Route::get('/dashboard-ecommerce-dashboard', function () {
-    return view('pages.dashboard-ecommerce-dashboard', ['type_menu' => 'dashboard']);
-});
 
 // Menu Admin
 Route::middleware(['admin', 'auth'])->group(function () {
@@ -81,7 +76,7 @@ Route::middleware(['mitra', 'auth'])->group(function () {
     Route::post('/mitra/dataPensiun/{id}/{bulan}/show', [MitraController::class, 'show_2'])->name('dataPensiun_show');
     Route::post('/mitra/dataPensiun/{id}/{bulan}/update', [MitraController::class, 'update_2'])->name('dataPensiun_update');
     Route::post('/mitra/dataPensiun/{id}/{bulan}/destroy', [MitraController::class, 'destroy_2'])->name('dataPensiun_destroy');
-    Route::post('/mitra/pesertaPensiun/import', [MitraController::class, 'import'])->name('dataPesertaPensiun_import');
+    Route::post('/mitra/dataPensiun/{id}/{bulan}/import', [MitraController::class, 'import'])->name('dataPesertaPensiun_import');
 
     Route::get('/mitra/uploadBuktiPembayaran', [VerifikasiBerkasController::class, 'index'])->name('uploadBuktiPembayaran');
     Route::get('/mitra/uploadBuktiPembayaran/{id}', [VerifikasiBerkasController::class, 'getDataByTahun'])->name('uploadBuktiPembayaranByTahun');
@@ -91,6 +86,8 @@ Route::middleware(['mitra', 'auth'])->group(function () {
 });
 
 Route::get('/profile', [UserController::class, 'index'])->name('profile');
+Route::post('/profile/show', [UserController::class, 'show'])->name('profile_show');
+Route::post('/profile/update', [UserController::class, 'update'])->name('profile_update');
 
 // Layout
 Route::get('/layout-default-layout', function () {

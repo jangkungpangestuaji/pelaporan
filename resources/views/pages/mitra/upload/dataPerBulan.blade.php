@@ -4,6 +4,7 @@
 @push('style')
 <!-- CSS Libraries -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.css" />
+<link rel="stylesheet" href="{{ asset('library/summernote/dist/summernote-bs4.css') }}">
 @endpush
 
 @section('main')
@@ -27,7 +28,7 @@
                         </div>
                     </div>
                 </div>
-                <table id="table1" class="table table-bordered table-striped table-hover" style="width: 100%;">
+                <table id="table" class="table table-bordered table-striped table-hover" style="width: 100%;">
                     <thead>
                         <tr class="text-center">
                             <th>No</th>
@@ -53,7 +54,7 @@
     {{ csrf_field() }}
     <div class="modal fade" id="modalUpload">
         <input type="hidden" id="id" name="id">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="judul_modal">Upload File Dalam Bentuk Pdf</h4>
@@ -69,7 +70,7 @@
                     </div>
                     <div class="form-group">
                         <label for="deskripsi">Deskripsi</label>
-                        <input type="textarea" class="form-control rounded-0 @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" placeholder="">
+                        <textarea class="form-control summernote-simple rounded-0 @error('deskripsi') is-invalid @enderror" id="deskripsi" name="deskripsi" placeholder=""></textarea>
                     </div>
                     <p>Peringatan : Harap upload ulang file anda karena batasan dari browser</p>
                 </div>
@@ -85,6 +86,7 @@
 @push('scripts')
 <!-- JS Libraies -->
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.js"></script>
+<script src="{{ asset('library/summernote/dist/summernote-bs4.js') }}"></script>
 <script src="{{ asset('library/sweetalert/dist/sweetalert.min.js') }}"></script>
 <!-- Page Specific JS File -->
 
@@ -95,7 +97,7 @@
     })
 
     function isi_table() {
-        $('#table1').DataTable({
+        $('#table').DataTable({
             serverside: true,
             responsive: true,
             ajax: {
@@ -117,16 +119,18 @@
                         // Periksa apakah bulan saat ini sama dengan bulan pada baris data
                         var currentMonth = new Date().getMonth() + 1; // Mendapatkan bulan saat ini (mulai dari 1 untuk Januari)
                         var rowMonth = row.id;
-                        var status = '{{$status}}';
-                        // console.log(row);
+                        console.log(data);
+                        
                         if (rowMonth === currentMonth) {
-                            if (status == 1) {
+                            if (data == 1) {
                                 $('#simpan').text('Update');
-                                return "<button type='button' id='" + row.id + "' class='update btn btn-warning' data-toggle='modal' data-target='#modalUpload'>Update</button>";
+                                return "<button type='button' id='" + row.id + "' class='update btn btn-primary' data-toggle='modal' data-target='#modalUpload'>Update</button>";
+                            } else if (data == 2) {
+                                return "<button type='button' id='" + row.id + "' class='upload btn btn-secondary' data-toggle='' data-target='' disabled>Telah diverifikasi</button>";
                             } else {
                                 $('#simpan').text('Simpan');
                                 // Bulan saat ini, button aktif
-                                return "<button type='button' id='" + row.id + "' class='upload btn btn-warning' data-toggle='modal' id='upload' data-target='#modalUpload'>Upload</button>";
+                                return "<button type='button' id='" + row.id + "' class='upload btn btn-primary' data-toggle='modal' data-target='#modalUpload'>Upload</button>";
                             }
                         } else {
                             // Bukan bulan saat ini, button tidak aktif
@@ -182,7 +186,7 @@
             processData: false, // Menghindari pemrosesan data otomatis oleh jQuery
             contentType: false, // Tidak mengatur content-type secara otomatis
             success: function(res) { // Output response ke konsol jika perlu
-                $("#table1").DataTable().ajax.reload(); // Memuat ulang data tabel jika perlu
+                $("#table").DataTable().ajax.reload(); // Memuat ulang data tabel jika perlu
                 $("#modalUpload .close").click(); // Menutup modal jika perlu
 
                 // Tampilkan pesan sukses kepada pengguna
@@ -191,16 +195,6 @@
                     'Data berhasil ditambahkan',
                     'success'
                 );
-
-                // Mendapatkan bulan yang baru saja diunggah
-                var uploadedMonth = res.month; // Pastikan untuk mengganti 'month' dengan properti yang sesuai dari respons Anda
-
-                // Memeriksa apakah bulan yang diunggah adalah bulan saat ini
-                if (uploadedMonth == currentMonth) {
-                    // Jika ya, ubah teks tombol upload menjadi "Update"
-                    $('#' + uploadedMonth).text('Update');
-                    $('#simpan').text('Update');
-                }
             },
             error: function(err) {
                 console.log(err); // Output error ke konsol untuk debugging
@@ -240,14 +234,12 @@
                     // Mengisi iframe dengan URL PDF
                     $("#pdfViewer").attr("src", pdfUrl);
                     var file_name = res.data[0].file_name;
-                    console.log($("#modalUpload [name='file_name']").val());
                     // Memasukkan nilai ID, nama file, dan deskripsi ke dalam input
                     $("#modalUpload [name='id']").val(res.data[0].id);
-                    $("#modalUpload [name='deskripsi']").val(res.data[0].deskripsi);
-                    $("#modalUpload [name='file_name']").val(res.data[0].file_name);
+                    $("#modalUpload [name='deskripsi']").summernote('code', res.data[0].deskripsi);
                 } else {
                     Swal.fire(
-                        'Sukses',
+                        'Error',
                         'File PDF tidak ditemukan',
                         'success'
                     );
@@ -285,7 +277,6 @@
         formData.append('deskripsi', deskripsi);
         formData.append('_token', '{{ csrf_token() }}');
 
-        console.log(file);
         $.ajax({
             url: "{{$url}}/" + currentMonth + "/update",
             type: "POST",
@@ -294,7 +285,7 @@
             contentType: false,
             success: function(res) {
                 console.log(res);
-                $("#table1").DataTable().ajax.reload();
+                $("#table").DataTable().ajax.reload();
                 // alert
                 Swal.fire(
                     'Sukses',

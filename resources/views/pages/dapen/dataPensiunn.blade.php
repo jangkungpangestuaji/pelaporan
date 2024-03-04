@@ -31,17 +31,17 @@
                         <table id="table" class="table table-bordered table-hover" style="width: 100%;">
                             <thead>
                                 <tr class="text-center">
-                                    <th class="col-1 text-center">No</th>
-                                    <th class="col-lg-8 text-center">nama</th>
-                                    <th class="col-lg-8 text-center">no_peserta</th>
-                                    <th class="col-lg-8 text-center">nik</th>
-                                    <th class="col-lg-8 text-center">gaji_pokok</th>
-                                    <th class="col-lg-8 text-center">adj_gapok</th>
-                                    <th class="col-lg-8 text-center">in_peserta</th>
-                                    <th class="col-lg-8 text-center">rapel_in_peserta</th>
-                                    <th class="col-lg-8 text-center">in_pk</th>
-                                    <th class="col-lg-8 text-center">rapel_in_pk</th>
-                                    <th class="col-lg-8 text-center">jumlah</th>
+                                    <th class="col-lg-1 text-center">No</th>
+                                    <th class="col-lg-8 text-center">Nama</th>
+                                    <th class="col-lg-8 text-center">No Peserta</th>
+                                    <th class="col-lg-8 text-center">NIK</th>
+                                    <th class="col-lg-8 text-center">Gaji Pokok</th>
+                                    <th class="col-lg-8 text-center">Adj. Gaji Pokok</th>
+                                    <th class="col-lg-8 text-center">IN Peserta</th>
+                                    <th class="col-lg-8 text-center">Rapel IN Peserta</th>
+                                    <th class="col-lg-8 text-center">IN PK</th>
+                                    <th class="col-lg-8 text-center">Rapel IN PK</th>
+                                    <th class="col-lg-8 text-center">Jumlah</th>
                                     <th class="col-sm-3 text-center">Aksi</th>
                                 </tr>
                             </thead>

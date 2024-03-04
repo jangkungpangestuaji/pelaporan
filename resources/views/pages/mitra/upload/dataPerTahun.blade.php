@@ -97,7 +97,7 @@
             serverside: true,
             responsive: true,
             ajax: {
-                url: "{{ route('dataPensiun') }}"
+                url: "{{ route('uploadBuktiPembayaran') }}"
             },
             columns: [{
                     "data": null,
