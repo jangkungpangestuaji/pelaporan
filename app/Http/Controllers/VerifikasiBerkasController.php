@@ -44,12 +44,16 @@ class VerifikasiBerkasController extends Controller
     }
     public function getDataByTahun($id)
     {
-        $data = DB::table('bulan')->get();
+        $data = DB::table('bulan')
+            ->select('bulan.id', 'bulan.bulan', 'bukti_iuran.tahun_id', 'bukti_iuran.status')
+            ->leftJoin('bukti_iuran', 'bukti_iuran.bulan_id', 'bulan.id')
+            ->get();
         $cek = DB::table('bukti_iuran')->pluck('status')->all();
         $array = [
             'data' => $data,
             'id' => $id
         ];
+        // dd($data);
         if (request()->ajax()) {
             return datatables()->of($data)
                 ->addColumn('Aksi', function ($row) use ($cek) {
@@ -63,32 +67,31 @@ class VerifikasiBerkasController extends Controller
     }
     public function upload(Request $request, $tahun, $bulan)
     {
-        $status = DB::table('bukti_iuran')->select('iuran_id')->where('iuran_id', '=', date('m'))
+        $cek = DB::table('bukti_iuran')
+            ->select('id')
+            ->where('tahun_id', '=', $tahun)
+            ->where('bulan_id', '=', $bulan)
             ->exists();
-        $iuran_id = DB::table('data_iuran')
-            ->select('data_iuran.id')
-            ->where('data_iuran.tahun_id', '=', $tahun)
-            ->where('data_iuran.bulan_id', '=', $bulan)
-            ->get();
 
         $request->validate([
             'file_name' => 'required|file', // Validasi bahwa input adalah file
             'deskripsi' => 'required', // Validasi bahwa deskripsi harus ada
         ]);
 
-        $cek = DB::table('bukti_iuran')->select('iuran_id')->where('iuran_id', '=', $iuran_id[0]->id)
-            ->exists();
-
+        $instansi = Auth::user()->instansi_id;
         if (!$cek) {
             if ($request->hasFile('file_name')) {
                 $file = $request->file('file_name');
                 // $fileName = $file->getClientOriginalName();
                 $fileName = Str::uuid() . '.pdf';
                 $data = [
-                    'iuran_id' => $iuran_id[0]->id,
+                    'bulan_id' => $bulan,
+                    'tahun_id' => $tahun,
+                    'instansi_id' => $instansi,
                     'file_name' => $fileName,
                     'deskripsi' => $request->deskripsi,
                 ];
+                // dd($data);
                 $upload = BuktiIuran::insert($data);
                 $file->move(public_path('uploads'), $fileName);
 
@@ -104,10 +107,9 @@ class VerifikasiBerkasController extends Controller
     {
         // $id = $request->id;
         $data = DB::table('bukti_iuran')
-            ->select('bukti_iuran.id', 'bukti_iuran.file_name', 'bukti_iuran.deskripsi')
-            ->leftJoin('data_iuran', 'bukti_iuran.iuran_id', '=', 'data_iuran.id')
-            ->where('data_iuran.tahun_id', '=', $tahun)
-            ->where('data_iuran.bulan_id', '=', $bulan)
+            ->select('id', 'file_name', 'deskripsi')
+            ->where('tahun_id', '=', $tahun)
+            ->where('bulan_id', '=', $bulan)
             ->get();
         // dd();
         return response()->json(['data' => $data]);
@@ -197,25 +199,23 @@ class VerifikasiBerkasController extends Controller
     }
     public function getDataByInstansi($tahun, $bulan)
     {
-        $results = DB::table('bukti_iuran')
+        $results = DB::table('instansi')
+            ->select('instansi.id', 'instansi.nama_instansi', 'bukti_iuran.bulan_id', 'bukti_iuran.tahun_id', 'bukti_iuran.status')
             ->orderBy('bukti_iuran.updated_at', 'asc')
-            ->leftJoin('data_iuran', 'data_iuran.id', 'bukti_iuran.iuran_id')
-            ->leftJoin('peserta', 'peserta.id', 'data_iuran.peserta_id')
-            ->leftJoin('instansi', 'instansi.id', 'peserta.instansi_id')
-            ->where('data_iuran.tahun_id', '=', $tahun)
-            ->where('data_iuran.bulan_id', '=', $bulan)
+            ->leftJoin('bukti_iuran', 'instansi.id', 'bukti_iuran.instansi_id')
+            ->where('instansi.id', '!=', 1)
+            ->where('bulan_id', '=', $bulan)
             ->get();
-
-        // dd($results);
-        $array = ([
+            
+        $array = [
             'type_menu' => 'verifikasi',
             'tahun' => $tahun,
             'bulan' => $bulan,
             'results' => $results,
-        ]);
+        ];
         if (request()->ajax()) {
             return datatables()->of($results)
-                ->addColumn('Aksi', function ($row) use ($array) {
+                ->addColumn('Aksi', function ($results) {
                 })
                 ->rawColumns(['Aksi'])
                 ->make(true);
@@ -227,12 +227,10 @@ class VerifikasiBerkasController extends Controller
     {
         $instansi_id = $request->id;
         $data = DB::table('bukti_iuran')
-            ->select('bukti_iuran.id', 'bukti_iuran.file_name', 'bukti_iuran.deskripsi', 'bukti_iuran.status')
-            ->leftJoin('data_iuran', 'bukti_iuran.iuran_id', '=', 'data_iuran.id')
-            ->leftJoin('peserta', 'peserta.id', '=', 'data_iuran.peserta_id')
-            ->where('peserta.instansi_id', '=', $instansi_id)
-            ->where('data_iuran.tahun_id', '=', $tahun)
-            ->where('data_iuran.bulan_id', '=', $bulan)
+            ->select('id', 'file_name', 'deskripsi', 'status')
+            ->where('instansi_id', '=', $instansi_id)
+            ->where('tahun_id', '=', $tahun)
+            ->where('bulan_id', '=', $bulan)
             ->get();
         // dd($data);
         return response()->json(['data' => $data]);

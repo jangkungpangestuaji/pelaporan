@@ -32,7 +32,6 @@
                         <tr class="text-center">
                             <th>No</th>
                             <th>Instansi</th>
-                            <th>Tanggal</th>
                             <th>Aksi</th>
                         </tr>
                     </thead>
@@ -54,7 +53,7 @@
     {{ csrf_field() }}
     <div class="modal fade" id="modalVerifikasi">
         <input type="hidden" id="id" name="id">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title" id="judul_modal">Upload File Dalam Bentuk Pdf</h4>
@@ -119,24 +118,44 @@
                     data: 'nama_instansi',
                 },
                 {
-                    data: 'updated_at',
-                },
-                {
                     data: 'Aksi',
                     render: function(data, type, row) {
                         // Periksa apakah bulan saat ini sama dengan bulan pada baris data
                         var currentMonth = new Date().getMonth() + 1; // Mendapatkan bulan saat ini (mulai dari 1 untuk Januari)
                         var rowMonth = row.id;
                         var status = row.status;
-
-                        if (status == 1) {
-                            return "<button type='button' id='" + row.instansi_id + "' class='buka btn btn-warning' data-toggle='modal' data-target='#modalVerifikasi'>Verifikasi</button>";
-                        } else if(status == 2) {
-                            // Bulan saat ini, button aktif
-                            return "<button type='button' id='" + row.instansi_id + "' class='buka btn btn-warning' data-toggle='modal' id='upload' data-target='#modalVerifikasi'>Telah Diverifikasi</button>";
+                        console.log(row);
+                        if (row.tahun_id == '{{$tahun}}'){
+                            if (row.bulan_id == '{{$bulan}}') {
+                                if (row.status == 1) {
+                                    return "<button type='button' id='" + row.id + "' class='buka btn btn-primary' data-toggle='modal' data-target='#modalVerifikasi'>Verifikasi</button>";
+                                } else if (row.status == 2) {
+                                    return "<button type='button' id='" + row.id + "' class='buka btn btn-secondary' data-toggle='modal' data-target='#modalVerifikasi'>Telah diverifikasi</button>";
+                                } else {
+                                    return "<button type='button' id='" + row.id + "' class='buka btn btn-primary' data-toggle='modal' data-target='#modalUpload'>Upload</button>";
+                                }
+                            } else {
+                                if (row.status == 1) {
+                                    return "<button type='button' id='" + row.id + "' class='buka btn btn-secondary'>Belum Diverifikasi</button>";
+                                } else if (row.status == 2) {
+                                    return "<button type='button' id='" + row.id + "' class='buka btn btn-secondary'>Telah diverifikasi</button>";
+                                } else if (row.status == 3) {
+                                    return "<button type='button' id='" + row.id + "' class='buka btn btn-secondary'>Tidak dapat diperbarui</button>";
+                                }else {
+                                    return "<button type='button' id='" + row.id + "' class='buka btn btn-secondary'>Tidak tersedia</button>";
+                                }
+                            }
                         } else {
-                            return "<button type='button' id='" + row.instansi_id + "' class='buka btn btn-warning' data-toggle='modal' id='upload' data-target='#modalVerifikasi'>Meminta ulang</button>";
+                            return "<button type='button' id='" + row.id + "' class='buka btn btn-secondary'>Tidak tersedia</button>";
                         }
+                        // if (status == 1) {
+                        //     return "<button type='button' id='" + row.instansi_id + "' class='buka btn btn-warning' data-toggle='modal' data-target='#modalVerifikasi'>Verifikasi</button>";
+                        // } else if(status == 2) {
+                        //     // Bulan saat ini, button aktif
+                        //     return "<button type='button' id='" + row.instansi_id + "' class='buka btn btn-warning' data-toggle='modal' id='upload' data-target='#modalVerifikasi'>Telah Diverifikasi</button>";
+                        // } else {
+                        //     return "<button type='button' id='" + row.instansi_id + "' class='buka btn btn-warning' data-toggle='modal' id='upload' data-target='#modalVerifikasi'>Meminta ulang</button>";
+                        // }
                     }
                 }
             ]
