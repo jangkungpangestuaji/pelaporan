@@ -43,7 +43,7 @@ class MitraController extends Controller
                 ->rawColumns(['Aksi'])
                 ->make(true);
         }
-        return view('pages.mitra.DataPesertaPensiun', $type_menu, compact('data'));
+        return view('pages.mitra.dataPesertaPensiun', $type_menu, compact('data'));
     }
     public function index_2()
     {
@@ -200,7 +200,7 @@ class MitraController extends Controller
         $id = $request->id;
         if ($request->adj_gapok == null) {
             $adj_gapok = 0;
-        } else{
+        } else {
             $adj_gapok = $request->adj_gapok;
         }
         $update = [
