@@ -118,10 +118,10 @@
                     render: function(data, type, row) {
                         // Periksa apakah bulan saat ini sama dengan bulan pada baris data
                         var currentMonth = new Date().getMonth() + 1; // Mendapatkan bulan saat ini (mulai dari 1 untuk Januari)
-                        var rowMonth = row.id;
-
-                        if (row.tahun_id == '{{$id}}'){
-                            if (rowMonth === currentMonth) {
+                        // var rowMonth = row.id;
+                        if (row.tahun_id == '{{$id}}') {
+                            console.log(currentMonth);
+                            if (row.bulan_id == currentMonth) {
                                 if (row.status == 1) {
                                     return "<button type='button' id='" + row.id + "' class='update btn btn-primary' data-toggle='modal' data-target='#modalUpload'>Update</button>";
                                 } else if (row.status == 2) {
@@ -136,7 +136,7 @@
                                     return "<button type='button' id='" + row.id + "' class='update btn btn-secondary'>Telah diverifikasi</button>";
                                 } else if (row.status == 3) {
                                     return "<button type='button' id='" + row.id + "' class='update btn btn-secondary'>Tidak dapat diperbarui</button>";
-                                }else {
+                                } else {
                                     return "<button type='button' id='" + row.id + "' class='upload btn btn-secondary'>Tidak tersedia</button>";
                                 }
                             }

@@ -44,19 +44,46 @@ class VerifikasiBerkasController extends Controller
     }
     public function getDataByTahun($id)
     {
-        $data = DB::table('bulan')
-            ->select('bulan.id', 'bulan.bulan', 'bukti_iuran.tahun_id', 'bukti_iuran.status')
-            ->leftJoin('bukti_iuran', 'bukti_iuran.bulan_id', 'bulan.id')
+        $currentYear = date('Y');
+        $currentMonth = date('m');
+
+        $getIdTahun = DB::table('tahun')->select('id')->where('tahun', '=', $currentYear)->get();
+        $getIdInstansi = Auth::user()->instansi_id;
+
+
+        $cek = DB::table('bukti_iuran')
+            ->where('tahun_id', '=', $getIdTahun[0]->id)
+            ->where('instansi_id', '=', $getIdInstansi)
+            ->exists();
+        if (!$cek) {
+            for ($n = 1; $n <= 12; $n++) {
+                // dd($cek);
+
+                $insert = [
+                    'bulan_id' => $n,
+                    'tahun_id' => $getIdTahun[0]->id,
+                    'instansi_id' => $getIdInstansi,
+                ];
+                BuktiIuran::insert($insert);
+            }
+        }
+
+
+        $data = DB::table('bukti_iuran')
+            ->orderBy('bulan_id', 'asc')
+            ->select('bukti_iuran.id', 'bulan.bulan', 'bukti_iuran.tahun_id','bukti_iuran.bulan_id', 'bukti_iuran.status')
+            ->leftJoin('bulan', 'bukti_iuran.bulan_id', 'bulan.id')
+            ->where('bukti_iuran.tahun_id', '=', $id)
             ->get();
-        $cek = DB::table('bukti_iuran')->pluck('status')->all();
+        // dd($data);
         $array = [
             'data' => $data,
             'id' => $id
         ];
-        // dd($data);
+
         if (request()->ajax()) {
             return datatables()->of($data)
-                ->addColumn('Aksi', function ($row) use ($cek) {
+                ->addColumn('Aksi', function ($data) use ($cek) {
                     return $cek;
                 })
                 ->rawColumns(['Aksi'])
@@ -206,7 +233,7 @@ class VerifikasiBerkasController extends Controller
             ->where('instansi.id', '!=', 1)
             ->where('bulan_id', '=', $bulan)
             ->get();
-            
+
         $array = [
             'type_menu' => 'verifikasi',
             'tahun' => $tahun,
