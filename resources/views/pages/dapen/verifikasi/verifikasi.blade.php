@@ -132,7 +132,7 @@
                                 } else if (row.status == 2) {
                                     return "<button type='button' id='" + row.id + "' class='buka btn btn-secondary' data-toggle='modal' data-target='#modalVerifikasi'>Telah diverifikasi</button>";
                                 } else {
-                                    return "<button type='button' id='" + row.id + "' class='buka btn btn-primary' data-toggle='modal' data-target='#modalUpload'>Upload</button>";
+                                    return "<button type='button' id='" + row.id + "' class='buka btn btn-secondary' data-toggle='modal' data-target='#modalVerifikasi'>Meminta Ulang</button>";
                                 }
                             } else {
                                 if (row.status == 1) {
@@ -148,14 +148,6 @@
                         } else {
                             return "<button type='button' id='" + row.id + "' class='buka btn btn-secondary'>Tidak tersedia</button>";
                         }
-                        // if (status == 1) {
-                        //     return "<button type='button' id='" + row.instansi_id + "' class='buka btn btn-warning' data-toggle='modal' data-target='#modalVerifikasi'>Verifikasi</button>";
-                        // } else if(status == 2) {
-                        //     // Bulan saat ini, button aktif
-                        //     return "<button type='button' id='" + row.instansi_id + "' class='buka btn btn-warning' data-toggle='modal' id='upload' data-target='#modalVerifikasi'>Telah Diverifikasi</button>";
-                        // } else {
-                        //     return "<button type='button' id='" + row.instansi_id + "' class='buka btn btn-warning' data-toggle='modal' id='upload' data-target='#modalVerifikasi'>Meminta ulang</button>";
-                        // }
                     }
                 }
             ]

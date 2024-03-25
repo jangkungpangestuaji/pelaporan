@@ -32,7 +32,7 @@
                             <thead>
                                 <tr class="text-center">
                                     <th class="col-1 text-center">No</th>
-                                    <th class="col-lg-8 text-center">Tahun</th>
+                                    <th class="col-lg-8 text-center">Instansi</th>
                                     <th class="col-sm-3 text-center">Aksi</th>
                                 </tr>
                             </thead>
@@ -65,7 +65,7 @@
             serverside: true,
             responsive: true,
             ajax: {
-                url: "/staff/verifikasi/{{$instansi}}"
+                url: "{{route ('verifikasi')}}"
             },
             columns: [{
                     "data": null,
@@ -75,7 +75,7 @@
                     }
                 },
                 {
-                    data: 'tahun',
+                    data: 'nama_instansi',
                 },
                 {
                     data: 'Aksi',

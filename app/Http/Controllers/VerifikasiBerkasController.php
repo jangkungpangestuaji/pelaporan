@@ -153,8 +153,27 @@ class VerifikasiBerkasController extends Controller
             return response()->json(['data' => $data]);
         }
     }
+    public function showInstansi()
+    {
+        $data = DB::table('instansi')->orderBy('id', 'asc')->get();
+        if (request()->ajax()) {
+            return datatables()->of($data)
+                ->addColumn('Aksi', function ($data) {
+                    $button = "
+                    <a href='/staff/verifikasi/{$data->id}'>
+                    <button type='button' id='" . $data->id . "' class='show-data btn btn-warning' >
+                    Buka
+                    </button>
+                    </a>";
 
-    public function index2()
+                    return $button;
+                })
+                ->rawColumns(['Aksi'])
+                ->make(true);
+        }
+        return view('pages.dapen.verifikasi.dataPerInstansi', $data);
+    }
+    public function showTahun($instansi)
     {
         $currentYear = date('Y');
 
@@ -167,39 +186,13 @@ class VerifikasiBerkasController extends Controller
         $array = ([
             'type_menu' => 'verifikasi',
             'dataTahun' => $dataTahun,
+            'instansi'  => $instansi
         ]);
         if (request()->ajax()) {
             return datatables()->of($dataTahun)
-                ->addColumn('Aksi', function ($dataTahun) {
-                    $button = "
-                    <a href='/staff/verifikasi/{$dataTahun->id}'>
-                    <button type='button' id='" . $dataTahun->id . "' class='show-data btn btn-warning' >
-                    Buka
-                    </button>
-                    </a>";
-
-                    return $button;
-                })
-                ->rawColumns(['Aksi'])
-                ->make(true);
-        }
-        return view('pages.dapen.verifikasi.dataPerTahun', $array, compact('dataTahun'));
-    }
-    public function getDataByTahun2($tahun)
-    {
-        $results = DB::table('bulan')->orderBy('id', 'asc')->get();
-
-        $array = [
-            'type_menu' => 'verifikasi',
-            'results' => $results,
-            'tahun' => $tahun,
-        ];
-
-        if (request()->ajax()) {
-            return datatables()->of($results)
                 ->addColumn('Aksi', function ($row) use ($array) {
                     $button = "
-                    <a href='/staff/verifikasi/{$array['tahun']}/{$row->id}'>
+                    <a href='/staff/verifikasi/{$array['instansi']}/{$row->id}'>
                     <button type='button' id='" . $row->id . "' class='show-data btn btn-warning' >
                     Buka
                     </button>
@@ -210,47 +203,45 @@ class VerifikasiBerkasController extends Controller
                 ->rawColumns(['Aksi'])
                 ->make(true);
         }
-        return view('pages.dapen.verifikasi.dataPerBulan', $array);
+        return view('pages.dapen.verifikasi.dataPerTahun', $array);
     }
-    public function getDataByInstansi($tahun, $bulan)
+    public function getDataByTahun2($instansi, $tahun)
     {
-        $results = DB::table('instansi')
-            ->select('instansi.id', 'instansi.nama_instansi', 'bukti_iuran.bulan_id', 'bukti_iuran.tahun_id', 'bukti_iuran.status')
-            ->orderBy('bukti_iuran.updated_at', 'asc')
-            ->leftJoin('bukti_iuran', 'instansi.id', 'bukti_iuran.instansi_id')
-            ->where('instansi.id', '!=', 1)
-            ->where('bulan_id', '=', $bulan)
+        $results = DB::table('bukti_iuran')
+            ->orderBy('bulan.id', 'asc')
+            ->leftJoin('bulan', 'bulan.id', 'bukti_iuran.bulan_id')
+            ->where('instansi_id', '=', $instansi)
+            ->where('tahun_id', '=', $tahun)
             ->get();
-
+        // dd($results);
         $array = [
             'type_menu' => 'verifikasi',
-            'tahun' => $tahun,
-            'bulan' => $bulan,
             'results' => $results,
+            'instansi' => $instansi,
+            'tahun' => $tahun,
         ];
         if (request()->ajax()) {
             return datatables()->of($results)
-                ->addColumn('Aksi', function ($results) {
+                ->addColumn('Aksi', function ($row) {
                 })
                 ->rawColumns(['Aksi'])
                 ->make(true);
         }
-        return view('pages.dapen.verifikasi.verifikasi', $array);
+        return view('pages.dapen.verifikasi.dataPerBulan', $array);
     }
 
-    public function show2(Request $request, $tahun, $bulan)
+    public function show2(Request $request, $instansi, $tahun)
     {
-        $instansi_id = $request->id;
+        $id = $request->id;
         $data = DB::table('bukti_iuran')
             ->select('id', 'file_name', 'deskripsi', 'status')
-            ->where('instansi_id', '=', $instansi_id)
+            ->where('instansi_id', '=', $instansi)
             ->where('tahun_id', '=', $tahun)
-            ->where('bulan_id', '=', $bulan)
+            ->where('bulan_id', '=', $id)
             ->get();
-        // dd($data);
         return response()->json(['data' => $data]);
     }
-    public function verifikasi(Request $request, $tahun, $bulan)
+    public function verifikasi(Request $request, $instansi, $tahun)
     {
         $id = $request->id;
         $simpan = [

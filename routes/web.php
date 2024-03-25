@@ -54,11 +54,11 @@ Route::middleware(['staff', 'auth'])->group(function () {
     Route::get('/staff/export_excel/{id}/{tahun}/{bulan}', [DapenController::class, 'export_excel']);
     Route::post('/staff/dataPesertaPensiun/{id}/{tahun}/{bulan}/show', [DapenController::class, 'index'])->name('staffDataPensiunByBulan_show');
     
-    Route::get('/staff/verifikasi', [VerifikasiBerkasController::class, 'index2'])->name('verifikasi');
-    Route::get('/staff/verifikasi/{tahun}', [VerifikasiBerkasController::class, 'getDataByTahun2']);
-    Route::get('/staff/verifikasi/{tahun}/{bulan}', [VerifikasiBerkasController::class, 'getDataByInstansi']);
-    Route::post('/staff/verifikasi/{tahun}/{bulan}/show', [VerifikasiBerkasController::class, 'show2']);
-    Route::post('/staff/verifikasi/{tahun}/{bulan}/verifikasi', [VerifikasiBerkasController::class, 'verifikasi']);
+    Route::get('/staff/verifikasi', [VerifikasiBerkasController::class, 'showInstansi'])->name('verifikasi');
+    Route::get('/staff/verifikasi/{instansi}', [VerifikasiBerkasController::class, 'showTahun']);
+    Route::get('/staff/verifikasi/{instansi}/{tahun}', [VerifikasiBerkasController::class, 'getDataByTahun2']);
+    Route::post('/staff/verifikasi/{instansi}/{tahun}/show', [VerifikasiBerkasController::class, 'show2']);
+    Route::post('/staff/verifikasi/{instansi}/{tahun}/verifikasi', [VerifikasiBerkasController::class, 'verifikasi']);
 });
 
 // Menu Mitra
