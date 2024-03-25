@@ -71,7 +71,7 @@ class VerifikasiBerkasController extends Controller
 
         $data = DB::table('bukti_iuran')
             ->orderBy('bulan_id', 'asc')
-            ->select('bukti_iuran.id', 'bulan.bulan', 'bukti_iuran.tahun_id','bukti_iuran.bulan_id', 'bukti_iuran.status')
+            ->select('bukti_iuran.id', 'bulan.bulan', 'bukti_iuran.tahun_id', 'bukti_iuran.bulan_id', 'bukti_iuran.status')
             ->leftJoin('bulan', 'bukti_iuran.bulan_id', 'bulan.id')
             ->where('bukti_iuran.tahun_id', '=', $id)
             ->get();
@@ -94,40 +94,29 @@ class VerifikasiBerkasController extends Controller
     }
     public function upload(Request $request, $tahun, $bulan)
     {
-        $cek = DB::table('bukti_iuran')
-            ->select('id')
-            ->where('tahun_id', '=', $tahun)
-            ->where('bulan_id', '=', $bulan)
-            ->exists();
+        $id = $request->id;
 
         $request->validate([
             'file_name' => 'required|file', // Validasi bahwa input adalah file
             'deskripsi' => 'required', // Validasi bahwa deskripsi harus ada
         ]);
 
-        $instansi = Auth::user()->instansi_id;
-        if (!$cek) {
-            if ($request->hasFile('file_name')) {
-                $file = $request->file('file_name');
-                // $fileName = $file->getClientOriginalName();
-                $fileName = Str::uuid() . '.pdf';
-                $data = [
-                    'bulan_id' => $bulan,
-                    'tahun_id' => $tahun,
-                    'instansi_id' => $instansi,
-                    'file_name' => $fileName,
-                    'deskripsi' => $request->deskripsi,
-                ];
-                // dd($data);
-                $upload = BuktiIuran::insert($data);
-                $file->move(public_path('uploads'), $fileName);
+        if ($request->hasFile('file_name')) {
+            $file = $request->file('file_name');
+            // $fileName = $file->getClientOriginalName();
+            $fileName = Str::uuid() . '.pdf';
+            $data = [
+                'file_name' => $fileName,
+                'deskripsi' => $request->deskripsi,
+                'status' => 1,
+            ];
+            $upload = BuktiIuran::find($id);
+            $upload->update($data);
+            $file->move(public_path('uploads'), $fileName);
 
-                return response()->json(['month' => $bulan]);
-            } else {
-                return redirect()->back()->with('error', 'Mohon dicoba kembali');
-            }
+            return response()->json(['data' => $data]);
         } else {
-            return redirect()->back()->with('error', 'File telah diupload sebelumnya');
+            return redirect()->back()->with('error', 'Mohon dicoba kembali');
         }
     }
     public function show(Request $request, $tahun, $bulan)
@@ -205,7 +194,6 @@ class VerifikasiBerkasController extends Controller
             'results' => $results,
             'tahun' => $tahun,
         ];
-        // dd($array);
 
         if (request()->ajax()) {
             return datatables()->of($results)

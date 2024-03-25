@@ -80,7 +80,7 @@ Route::middleware(['mitra', 'auth'])->group(function () {
 
     Route::get('/mitra/uploadBuktiPembayaran', [VerifikasiBerkasController::class, 'index'])->name('uploadBuktiPembayaran');
     Route::get('/mitra/uploadBuktiPembayaran/{id}', [VerifikasiBerkasController::class, 'getDataByTahun'])->name('uploadBuktiPembayaranByTahun');
-    Route::post('/mitra/uploadBuktiPembayaran/{id}/{bulan}', [VerifikasiBerkasController::class, 'upload'])->name('uploadBuktiPembayaranByTahun_upload');
+    Route::post('/mitra/uploadBuktiPembayaran/{id}/{bulan}/upload', [VerifikasiBerkasController::class, 'upload'])->name('uploadBuktiPembayaranByTahun_upload');
     Route::post('/mitra/uploadBuktiPembayaran/{id}/{bulan}/show', [VerifikasiBerkasController::class, 'show'])->name('uploadBuktiPembayaranByTahun_show');
     Route::post('/mitra/uploadBuktiPembayaran/{id}/{bulan}/update', [VerifikasiBerkasController::class, 'update'])->name('uploadBuktiPembayaranByTahun_update');
 });

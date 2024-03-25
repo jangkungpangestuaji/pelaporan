@@ -50,7 +50,7 @@
 </p>
 
 <!-- Modal Tambah -->
-<form enctype="multipart/form-data">
+<form id="formx" enctype="multipart/form-data">
     {{ csrf_field() }}
     <div class="modal fade" id="modalUpload">
         <input type="hidden" id="id" name="id">
@@ -160,11 +160,17 @@
         }
     })
 
+    $(document).on('click', '.upload', function() {
+        let id = $(this).attr('id');
+        $('#id').val(id);
+    })
+    
     function upload() { // Mengubah teks tombol simpan jika perlu
         // Mendapatkan bulan saat ini
         var currentMonth = new Date().getMonth() + 1;
-
+        
         // Mendapatkan file yang dipilih oleh pengguna
+        var id = $('#id').val();
         var file = $('#file_name')[0].files[0];
         var deskripsi = $('#deskripsi').val();
 
@@ -180,12 +186,13 @@
 
         // Mengirim permintaan AJAX ke URL yang sesuai
         var formData = new FormData();
+        formData.append('id', id);
         formData.append('file_name', file);
         formData.append('deskripsi', deskripsi);
         formData.append('_token', '{{ csrf_token() }}');
-
+        // console.log(formData);
         $.ajax({
-            url: "{{$url}}/" + currentMonth, // Menggunakan URL yang diberikan dengan menambahkan bulan saat ini
+            url: "{{$url}}/" + currentMonth + "/upload", // Menggunakan URL yang diberikan dengan menambahkan bulan saat ini
             type: "POST", // Menggunakan metode POST
             data: formData,
             processData: false, // Menghindari pemrosesan data otomatis oleh jQuery

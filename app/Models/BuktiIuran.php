@@ -13,5 +13,6 @@ class BuktiIuran extends Model
         'iuran_id',
         'file_name',
         'deskripsi',
+        'status',
     ];
 }
