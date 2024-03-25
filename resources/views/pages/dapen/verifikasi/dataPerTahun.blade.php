@@ -65,7 +65,7 @@
             serverside: true,
             responsive: true,
             ajax: {
-                url: "/staff/{{$type_menu}}/{{$instansi_id}}"
+                url: "{{route ('verifikasi')}}"
             },
             columns: [{
                     "data": null,
